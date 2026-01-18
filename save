@@ -1,0 +1,415 @@
+local httpService = game:GetService('HttpService')
+
+local SaveManager = {} do
+	SaveManager.Folder = 'Blacktrap'
+	SaveManager.Ignore = {}
+	SaveManager.Parser = {
+		Checkbox = {
+			Save = function(idx, object) 
+				return { type = 'Checkbox', idx = idx, value = object.Value } 
+			end,
+			Load = function(idx, data)
+				if Checkboxs[idx] then 
+					Checkboxs[idx]:SetValue(data.value)
+				end
+			end,
+		},
+		
+		Dropdown = {
+			Save = function(idx, object)
+				return { type = 'Dropdown', idx = idx, value = object.Value, multi = object.Multi}
+			end,
+			Load = function(idx, data)
+				if Options[idx] then
+					Options[idx]:SetValue(data.value)
+				end
+			end,
+		},
+
+		Input = {
+			Save = function(idx, object)
+				return { type = 'Input', idx = idx, value = object.Value }
+			end,
+			Load = function(idx, data)
+				if Options[idx] and type(data.value) == 'string' then
+					Options[idx]:SetValue(data.value)
+				end
+			end,
+		},
+	}
+
+	function SaveManager:SetIgnoreIndexes(list)
+		for _, key in next, list do
+			self.Ignore[key] = true
+		end
+	end
+
+	function SaveManager:SetFolder(folder)
+		self.Folder = folder;
+		self:BuildFolderTree()
+	end
+
+	function SaveManager:Save(name)
+		if (not name) then
+			return false, 'no config file is selected'
+		end
+
+		local fullPath = self.Folder .. '/' .. name .. '.json'
+
+		local data = {
+			objects = {}
+		}
+
+		for idx, checkbox in next, Checkboxs do
+			if self.Ignore[idx] then continue end
+
+			table.insert(data.objects, self.Parser[checkbox.Type].Save(idx, checkbox))
+		end
+
+		for idx, option in next, Options do
+			if not self.Parser[option.Type] then continue end
+			if self.Ignore[idx] then continue end
+
+			table.insert(data.objects, self.Parser[option.Type].Save(idx, option))
+		end	
+
+		local success, encoded = pcall(httpService.JSONEncode, httpService, data)
+		if not success then
+			return false, 'failed to encode data'
+		end
+
+		writefile(fullPath, encoded)
+		return true
+	end
+
+	function SaveManager:Load(name)
+		if (not name) then
+			return false, 'no config file is selected'
+		end
+		
+		local file = self.Folder .. '/' .. name .. '.json'
+		if not isfile(file) then return false, 'invalid file' end
+
+		local success, decoded = pcall(httpService.JSONDecode, httpService, readfile(file))
+		if not success then return false, 'decode error' end
+
+		for _, option in next, decoded.objects do
+			if self.Parser[option.type] then
+				task.spawn(function() self.Parser[option.type].Load(option.idx, option) end) -- task.spawn() so the config loading wont get stuck.
+			end
+		end
+
+		return true
+	end
+
+    function SaveManager:BuildFolderTree()
+		local paths = {
+			self.Folder
+		}
+
+		for i = 1, #paths do
+			local str = paths[i]
+			if not isfolder(str) then
+				makefolder(str)
+			end
+		end
+	end
+
+
+	function SaveManager:RefreshConfigList()
+		local list = listfiles(self.Folder)
+
+		local out = {}
+		for i = 1, #list do
+			local file = list[i]
+			if file:sub(-5) == '.json' then
+				-- i hate this but it has to be done ...
+
+				local pos = file:find('.json', 1, true)
+				local start = pos
+
+				local char = file:sub(pos, pos)
+				while char ~= '/' and char ~= '\\' and char ~= '' do
+					pos = pos - 1
+					char = file:sub(pos, pos)
+				end
+
+				if char == '/' or char == '\\' then
+					table.insert(out, file:sub(pos + 1, start - 1))
+				end
+			end
+		end
+		
+		return out
+	end
+
+	function SaveManager:SetLibrary(library)
+		self.Library = library
+	end
+
+	function SaveManager:LoadAutoloadConfig()
+		if isfile(self.Folder .. '/autoload.txt') then
+			local name = readfile(self.Folder .. '/autoload.txt')
+
+			local success, err = self:Load(name)
+			if not success then
+				return self.Library:SetNotify('Save Manager', 'Failed to load autoload config: ' .. err, 3)
+			end
+
+            self.Library:SetNotify('Save Manager', string.format('Auto loaded config %q', name), 3)
+		end
+	end
+
+
+	function SaveManager:BuildConfigSection(tabname)
+        assert(self.Library, 'Must set SaveManager.Library')
+    
+        local sm_section1 = tabname:AddSection()
+        local sm_section2 = tabname:AddSection()
+    
+        local sm_group = sm_section1:AddGroup('Save Manager')
+    
+        sm_group:AddInput('SaveManager_ConfigName', {
+            Text = 'Config name',
+            Tooltip = 'Set a name for create your config.',
+            Default = SaveManager_ConfigName_Value,
+            Callback = function(Value)
+                SaveManager_ConfigName_Value = Value
+            end
+        })
+    
+        sm_group:AddDropdown('SaveManager_ConfigList', {
+            Text = 'Config list',
+            Tooltip = "List of the config you currently have.",
+            List = self:RefreshConfigList(),
+            Default = SaveManager_ConfigList_Value,
+            Callback = function(Value)
+                SaveManager_ConfigList_Value = Value
+            end
+        })
+    
+        sm_group:AddButton({
+            Text = 'Create config',
+            Tooltip = 'Create a config (set the name on textbox).',
+            Callback = function()
+                local name = SaveManager_ConfigName_Value
+    
+                if name:gsub(' ', '') == '' then 
+                    return self.Library:SetNotify('Save Manager', 'Invalid config name (empty)', 3)
+                end
+    
+                local success, err = self:Save(name)
+                if not success then
+                    return self.Library:SetNotify('Save Manager', 'Failed to create config: ' .. err, 3)
+                end
+    
+                self.Library:SetNotify('Save Manager', string.format('Created config %q', name), 3)
+
+                Options.SaveManager_ConfigList:UpdateValues(self:RefreshConfigList())
+			    --Options.SaveManager_ConfigList:SetValue(name)
+    
+            end
+        })
+    
+        sm_group:AddButton({
+            Text = 'Load Config',
+            Tooltip = 'Load your config',
+            Callback = function()
+                local name = SaveManager_ConfigList_Value
+    
+                local success, err = self:Load(name)
+                if not success then
+                    return self.Library:SetNotify('Save Manager', 'Failed to load config: ' .. err, 3)
+                end
+    
+                self.Library:SetNotify('Save Manager', string.format('Loaded config %q', name), 3)
+    
+            end
+        })
+    
+        sm_group:AddButton({
+            Text = 'Overwrite config',
+            Tooltip = 'Overwrite your config',
+            Callback = function()
+                local name = SaveManager_ConfigList_Value
+    
+                local success, err = self:Save(name)
+                if not success then
+                    return self.Library:SetNotify('Save Manager', 'Failed to rewrite config: ' .. err, 3)
+                end
+    
+                self.Library:SetNotify('Save Manager', string.format('Overwrote config %q', name), 3)
+            end
+        })
+    
+        sm_group:AddButton({
+            Text = 'Refresh config list.',
+            Tooltip = 'Refresh list your config',
+            Callback = function()
+                Options.SaveManager_ConfigList:UpdateValues(self:RefreshConfigList())
+			    --Options.SaveManager_ConfigList:SetValue(nil)
+            end
+        })
+    
+        sm_group:AddButton({
+            Text = 'Set as autoload',
+            Tooltip = 'Set as autoload config',
+            Callback = function()
+                local name = SaveManager_ConfigList_Value
+
+                writefile(self.Folder .. '/autoload.txt', name)
+
+                self.Library:SetNotify('Save Manager', string.format('Set %q to auto load', name), 3)
+    
+            end
+        })
+
+        local sm_group2 = sm_section2:AddGroup('UI Settings')
+
+        Keycode_List = {
+            'Tab',
+            'Delete / Insert',
+            'Num Lock',
+            'Caps Lock',
+            'Esc',
+            'Backspace',
+            'Left SHIFT',
+            'Right SHIFT',
+            'Left CTRL',
+            'Right CTRL',
+            'Left ALT',
+            'Right ALT',
+            'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8',
+        }
+
+        sm_group2:AddDropdown('Hidden_UI_List', {
+            Text = 'Hide UI',
+            Tooltip = 'Select key for hidden ui automated.',
+            List = Keycode_List,
+            Default = Selected_Code,
+            Callback = function(Value)
+                Selected_Code = Value
+
+                if Selected_Code == 'Tab' then
+                    self.Library:ToggleUI(Enum.KeyCode.Tab)
+                elseif Selected_Code == 'Delete / Insert' then
+                    self.Library:ToggleUI(Enum.KeyCode.Delete)
+                elseif Selected_Code == 'Num Lock' then
+                    self.Library:ToggleUI(Enum.KeyCode.NumLock)
+                elseif Selected_Code == 'Caps Lock' then
+                    self.Library:ToggleUI(Enum.KeyCode.CapsLock)
+                elseif Selected_Code == 'Esc' then
+                    self.Library:ToggleUI(Enum.KeyCode.Escape)
+                elseif Selected_Code == 'Backspace' then
+                    self.Library:ToggleUI(Enum.KeyCode.Backspace)
+                elseif Selected_Code == 'Left SHIFT' then
+                    self.Library:ToggleUI(Enum.KeyCode.LeftShift)
+                elseif Selected_Code == 'Right SHIFT' then
+                    self.Library:ToggleUI(Enum.KeyCode.RightShift)
+                elseif Selected_Code == 'Left CTRL' then
+                    self.Library:ToggleUI(Enum.KeyCode.LeftControl)
+                elseif Selected_Code == 'Right CTRL' then
+                    self.Library:ToggleUI(Enum.KeyCode.RightControl)
+                elseif Selected_Code == 'Left ALT' then
+                    self.Library:ToggleUI(Enum.KeyCode.LeftAlt)
+                elseif Selected_Code == 'Right ALT' then
+                    self.Library:ToggleUI(Enum.KeyCode.RightAlt)
+                elseif Selected_Code == 'F1' then
+                    self.Library:ToggleUI(Enum.KeyCode.F1)
+                elseif Selected_Code == 'F2' then
+                    self.Library:ToggleUI(Enum.KeyCode.F2)
+                elseif Selected_Code == 'F3' then
+                    self.Library:ToggleUI(Enum.KeyCode.F3)
+                elseif Selected_Code == 'F4' then
+                    self.Library:ToggleUI(Enum.KeyCode.F4)
+                elseif Selected_Code == 'F5' then
+                    self.Library:ToggleUI(Enum.KeyCode.F5)
+                elseif Selected_Code == 'F6' then
+                    self.Library:ToggleUI(Enum.KeyCode.F6)
+                elseif Selected_Code == 'F7' then
+                    self.Library:ToggleUI(Enum.KeyCode.F7)
+                elseif Selected_Code == 'F8' then
+                    self.Library:ToggleUI(Enum.KeyCode.F8)
+                end
+            end
+        })
+        Options.Hidden_UI_List:SetValue('Tab')
+
+        local UIBackgrounds = {
+            "Default",
+            "Roblox",
+            "Aesthetic",
+            "Souland",
+            "Aurora",
+            "Lotus",
+            "Glassmorphin",
+        }
+
+        sm_group2:AddDropdown('Background_UI', {
+            Text = 'Select Background',
+            Tooltip = 'Select background for UI',
+            List = UIBackgrounds,
+            Default = Selected_UI_Background,
+            Callback = function(Value)
+                Selected_UI_Background = Value
+
+                if Selected_UI_Background == "Default" then
+                    self.Library:ChangeBackground("http://www.roblox.com/asset/?id=92249981219647")
+                elseif Selected_UI_Background == "Roblox" then
+                    self.Library:ChangeBackground("http://www.roblox.com/asset/?id=81261017760848")
+                elseif Selected_UI_Background == "Aesthetic" then
+                    self.Library:ChangeBackground("http://www.roblox.com/asset/?id=87593622138343")
+                elseif Selected_UI_Background == "Souland" then
+                    self.Library:ChangeBackground("http://www.roblox.com/asset/?id=71327495284526")
+                elseif Selected_UI_Background == "Aurora" then
+                    self.Library:ChangeBackground("http://www.roblox.com/asset/?id=77930652950844")
+                elseif Selected_UI_Background == "Lotus" then
+                    self.Library:ChangeBackground("http://www.roblox.com/asset/?id=80583898178297")
+                elseif Selected_UI_Background == "Glassmorphin" then
+                    self.Library:ChangeBackground("http://www.roblox.com/asset/?id=83657422924891")
+                end
+            end
+        })
+        Options.Background_UI:SetValue('Aurora')
+
+
+        sm_group2:AddCheckbox('GameStat_Func', {
+            Text = 'Game Stat',
+            Default = ShowGameStat,
+            Callback = function(Value)
+                ShowGameStat = Value
+
+                if ShowGameStat then
+                    self.Library:AddGameStat()
+                else
+                    for i,v in pairs(game.CoreGui:GetChildren()) do
+                        if v.Name == 'NotificationsBT' then
+                            for k,l in pairs(v:GetChildren()) do
+                                if l.Name == 'Notification_Area' then
+                                    for a,b in pairs(l:GetChildren()) do
+                                        if b.Name == 'GameStat' then
+                                            b:Destroy()
+                                        end
+                                    end
+                                 end
+                            end
+                        end
+                    end
+                end
+            end
+        })
+
+    
+        if isfile(self.Folder .. '/autoload.txt') then
+            local name = readfile(self.Folder .. '/autoload.txt')
+            self.Library:SetNotify('Save Manager', string.format('Current autoload config: %q', name), 3)
+            
+        end
+    
+        SaveManager:SetIgnoreIndexes({ "SaveManager_ConfigName", "SaveManager_ConfigList" })
+    end
+
+	SaveManager:BuildFolderTree()
+end
+
+return SaveManager
