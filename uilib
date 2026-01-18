@@ -1,0 +1,3061 @@
+--[[
+
+    PREMIUM LIBRARY
+    local GetTimeExpired = DateTime.now():FormatLocalTime("YYYY-MM-DD", "en-us")
+]]
+
+--// Service
+local RunService = game:GetService("RunService");
+local Player = game.Players.LocalPlayer
+local CoreGui = game:GetService('CoreGui');
+local Mouse = Player:GetMouse();
+local UserInputService = game:GetService("UserInputService");
+local TweenService = game:GetService("TweenService");
+local TextService = game:GetService('TextService');
+local TweenInfo = TweenInfo.new;
+
+--// Init
+local LocalizationService = game:GetService("LocalizationService");
+local HttpService = game:GetService("HttpService");
+local NameID = Player.Name;
+local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name;
+
+local HWID = game:GetService("RbxAnalyticsService"):GetClientId()
+local UserId = Player.UserId
+local UserName = Player.Name
+local DisplayName = Player.DisplayName
+
+local GetExploit = (identifyexecutor and identifyexecutor()) or "Unknown Exploit"
+local GetAccountAge = Player.AccountAge
+
+local GetTimeRemaining = game:HttpGet("https://premium.btteam.net/membership-time.json")
+local GetTimeTable = HttpService:JSONDecode(GetTimeRemaining)
+local GetTimeExpired = "????" --DateTime.now():FormatLocalTime("YYYY-MM-DD", "en-us")
+local GetStatus = "Premium User"
+
+local char = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "_"}
+
+local function getRandomString(length)
+    local str = ''
+    for i=1,length do
+    local randomchar = char[math.random(1,#char)]
+    str = str .. randomchar
+    end
+    return str
+end
+
+local Library = {
+
+    FontColor = Color3.fromRGB(255, 255, 255);
+    MainColor = Color3.fromRGB(28, 28, 28);
+    BackgroundColor = Color3.fromRGB(20, 20, 20);
+    AccentColor = Color3.fromRGB(0, 85, 255);
+    OutlineColor = Color3.fromRGB(50, 50, 50);
+    RiskColor = Color3.fromRGB(255, 50, 50),
+
+    Black = Color3.new(0, 0, 0);
+    Font = Enum.Font.Code,
+};
+
+local Checkboxs = {};
+local Options = {};
+
+getgenv().Checkboxs = Checkboxs;
+getgenv().Options = Options;
+
+local Utility = {};
+local Objects = {};
+local Themes = {
+    Default = {
+        Lines = Color3.fromRGB(200, 200, 200),
+        Background_Outer = Color3.fromRGB(220, 220, 220),
+        Font =  Color3.fromRGB(120, 120, 120),
+        Menus_Background = Color3.fromRGB(235, 235, 235),
+        Textbox_Background = Color3.fromRGB(250, 250, 250),
+        Textbox_Font = Color3.fromRGB(120, 120, 255),
+        Setting_Button_Background_Active = Color3.fromRGB(255, 255, 255),
+        Setting_Button_Background_Deactive = Color3.fromRGB(200, 200, 200),
+        Setting_Button_Font_Active = Color3.fromRGB(0, 0, 0),
+        Frame_Search = Color3.fromRGB(240, 240, 240),
+        Scrolling_Tab_Background = Color3.fromRGB(230, 230, 230),
+        Inner_Tab_Background = Color3.fromRGB(250, 250, 250),
+        Group_Inner_Background = Color3.fromRGB(240, 240, 240),
+        Item_Active = Color3.fromRGB(120, 120, 250),
+        Item_Deactive = Color3.fromRGB(120, 120, 120),
+        Background_Active = Color3.fromRGB(220, 220, 255),
+        Background_Deactive = Color3.fromRGB(250, 250, 250),
+    }
+}
+
+local GUI_Name = getRandomString(28);
+local BLACKTRAP = Instance.new("ScreenGui");
+local UIScale = Instance.new("UIScale")
+
+BLACKTRAP.Name = GUI_Name;
+BLACKTRAP.ZIndexBehavior = Enum.ZIndexBehavior.Global;
+BLACKTRAP.Parent = CoreGui;
+
+UIScale.Name = "UIScale"
+UIScale.Parent = BLACKTRAP
+UIScale.Scale = 1
+
+local NotificationsBT = Instance.new("ScreenGui");
+local Notification_Area = Instance.new("Frame")
+local UIListLayoutArea = Instance.new("UIListLayout")
+
+NotificationsBT.Name = "NotificationsBT";
+NotificationsBT.ZIndexBehavior = Enum.ZIndexBehavior.Global;
+NotificationsBT.Parent = game.CoreGui;
+
+Notification_Area.Name = "Notification_Area"
+Notification_Area.Parent = NotificationsBT
+Notification_Area.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Notification_Area.BackgroundTransparency = 1.000
+Notification_Area.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Notification_Area.BorderSizePixel = 0
+Notification_Area.Position = UDim2.new(0.799526393, 0, 0, 0)
+Notification_Area.Size = UDim2.new(0.200000003, 0, 1, 0)
+
+UIListLayoutArea.Name = "UIListLayoutArea"
+UIListLayoutArea.Parent = Notification_Area
+UIListLayoutArea.HorizontalAlignment = Enum.HorizontalAlignment.Right
+UIListLayoutArea.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayoutArea.VerticalAlignment = Enum.VerticalAlignment.Center
+UIListLayoutArea.Padding = UDim.new(0, 10)
+
+table.insert(Library, GUI_Name);
+
+--// Color Init
+local White = Color3.fromRGB(255, 255, 255)
+local Black = Color3.fromRGB(0, 0, 0)
+local Red = Color3.fromRGB(255, 0, 0)
+local Yellow = Color3.fromRGB(255, 255, 0)
+local Green = Color3.fromRGB(0, 255, 0)
+local Blue = Color3.fromRGB(0, 0, 255)
+local Purple = Color3.fromRGB(255, 0, 255)
+local Brown = Color3.fromRGB(200, 200, 200)
+local Orange = Color3.fromRGB(255, 85, 0)
+local Pink = Color3.fromRGB(255, 85, 255)
+
+function Library:SetUIScale(val)
+    UIScale.Scale = val
+end
+
+function Library:GetUIScale()
+    return UIScale.Scale
+end
+
+function Library:DestroyGUI()
+    for i,v in pairs(CoreGui:GetChildren()) do
+        if v:IsA("ScreenGui") and (v.Name == GUI_Name or v.Name == 'NotificationsBT') then
+            v:Destroy();
+        end;
+    end;
+end;
+
+function Library:ToggleUI(isKeyCodes)
+    for i,v in pairs(CoreGui:GetChildren()) do
+        if v:IsA("ScreenGui") and v.Name == GUI_Name then
+            game:GetService("UserInputService").InputBegan:connect(function(input) 
+                if input.KeyCode == isKeyCodes then
+                    v.Enabled = not v.Enabled
+                end
+            end)
+        end;
+    end;
+end;
+
+function Library:Create(Class, Properties)
+    local _Instance = Class;
+
+    if type(Class) == 'string' then
+        _Instance = Instance.new(Class);
+    end;
+
+    for Property, Value in next, Properties do
+        _Instance[Property] = Value;
+    end;
+
+    return _Instance;
+end;
+
+function Library:AttemptSave()
+    if Library.SaveManager then
+        Library.SaveManager:Save();
+    end;
+end;
+
+local Contextual = Enum.ApplyStrokeMode.Contextual
+local Border = Enum.ApplyStrokeMode.Border
+
+function Library:AddStroke(isParent, isType, isColor)
+    Library:Create('UIStroke', {
+        Parent = isParent,
+        ApplyStrokeMode = isType,
+        Color = isColor
+    })
+end
+
+function Library:AddGradient(isParent, isColor1, isColor2)
+    Library:Create('UIGradient', {
+        Parent = isParent,
+        Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, isColor1),
+            ColorSequenceKeypoint.new(0.3, isColor1),
+            ColorSequenceKeypoint.new(1, isColor2),
+        })
+    })
+end
+
+function Library:GetTextBounds(Text, Font, Size, Resolution)
+    local Bounds = TextService:GetTextSize(Text, Size, Font, Resolution or Vector2.new(1920, 1080))
+    return Bounds.X, Bounds.Y
+end;
+
+local TooltipFolder = Instance.new("Folder", BLACKTRAP)
+TooltipFolder.Name = "Tooltips"
+
+function Library:AddToolTip(InfoString, TargetParent)
+    local X, Y = Library:GetTextBounds(InfoString, Library.Font, 12);
+
+    local Tooltip = Library:Create('Frame', {
+        BackgroundColor3 = Library.MainColor,
+        BorderColor3 = Library.MainColor,
+        BorderSizePixel = 0,
+        Position = TargetParent.Position,
+        Size = UDim2.new(0, X + 5, 0, Y + 4),
+        ZIndex = 100,
+        Parent = TooltipFolder,
+        Visible = false,
+    })
+
+    Library:Create('UICorner', {
+        CornerRadius = UDim.new(0, 2),
+        Parent = Tooltip,
+    })
+
+    Library:AddStroke(Tooltip, Border, Brown)
+
+    local Label = Library:Create("TextLabel", {
+        Parent = Tooltip;
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+        BackgroundTransparency = 1;
+        BorderColor3 = Color3.fromRGB(0, 0, 0);
+        Position = UDim2.new(0, 5, 0, 1);
+        Size = UDim2.new(1, 0, 1, 0);
+        BorderSizePixel = 0;
+        Text = InfoString;
+        TextColor3 = Library.FontColor;
+        TextXAlignment = Enum.TextXAlignment.Left;
+        ZIndex = Tooltip.ZIndex + 1;
+    })
+
+    local IsHovering = false;
+
+    TargetParent.MouseEnter:Connect(function()
+        IsHovering = true
+        Tooltip.Position = UDim2.new(0, Mouse.X + 15, 0, Mouse.Y + 12)
+        Tooltip.Visible = true
+
+        while IsHovering do
+            RunService.Heartbeat:Wait()
+
+            Tooltip.Position = UDim2.new(0, Mouse.X + 15, 0, Mouse.Y + 12)
+        end
+
+    end);
+
+    TargetParent.MouseLeave:Connect(function()
+        IsHovering = false;
+        Tooltip.Visible = false;
+    end);
+
+end;
+
+function Utility:Tween(instance, properties, duration, ...)
+    TweenService:Create(instance, TweenInfo(duration, ...), properties):Play();
+end;
+
+
+function Library:AddGameStat()
+
+    if not game.CoreGui.NotificationsBT.Notification_Area:FindFirstChild('GameStat') then
+
+        local GameStat = Instance.new("Frame")
+
+        GameStat.Name = "GameStat"
+        GameStat.Parent = Notification_Area
+        GameStat.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        GameStat.BackgroundTransparency = 0.700
+        GameStat.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        GameStat.BorderSizePixel = 0
+        GameStat.Size = UDim2.new(0, 200, 0, 85)
+        
+        Library:Create('UICorner', {
+            CornerRadius = UDim.new(0, 5),
+            Parent = GameStat,
+        })
+
+        Library:Create('TextLabel', {
+            Parent = GameStat,
+            BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+            BackgroundTransparency = 1.000,
+            BorderColor3 = Color3.fromRGB(0, 0, 0),
+            BorderSizePixel = 0,
+            Size = UDim2.new(0, 200, 0, 30),
+            Font = Enum.Font.SourceSansBold,
+            Text = "Game Stat",
+            TextColor3 = Color3.fromRGB(255, 255, 255),
+            TextSize = 16.000,
+        })
+        
+        local GameStatText = Library:Create('TextBox', {
+            Parent = GameStat,
+            BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+            BackgroundTransparency = 1.000,
+            BorderColor3 = Color3.fromRGB(0, 0, 0),
+            BorderSizePixel = 0,
+            Position = UDim2.new(0, 5, 0, 30),
+            Size = UDim2.new(1, -10, 0, 45),
+            ClearTextOnFocus = false,
+            Font = Enum.Font.SourceSansBold,
+            MultiLine = true,
+            Text = "",
+            TextColor3 = Color3.fromRGB(255, 255, 255),
+            TextSize = 12.000,
+            TextXAlignment = Enum.TextXAlignment.Left,
+            TextYAlignment = Enum.TextYAlignment.Top,
+            TextEditable = false,
+        })
+
+        local GameSTatFunc = {};
+
+        function GameSTatFunc:Refresh()
+            local ping = game:GetService("Stats").PerformanceStats.Ping:GetValueString()
+            local gpu = game:GetService("Stats").PerformanceStats.GPU:GetValueString()
+            local cpu = game:GetService("Stats").PerformanceStats.CPU:GetValueString()
+            local memory = game:GetService("Stats").PerformanceStats.Memory:GetValueString()
+            GameStatText.Text = "Ping   : "..ping.."\nGpu    : "..gpu.."\nCpu    : "..cpu.."\nMemory : "..memory
+        end
+
+        game:GetService('RunService').Heartbeat:Connect(function()
+            GameSTatFunc:Refresh()
+        end)
+
+        return GameSTatFunc
+
+    else
+        game.CoreGui.NotificationsBT.Notification_Area:FindFirstChild('GameStat'):Destroy()
+    end
+    
+end
+
+function Library:SetNotify(title, text, times)
+
+    local XSize, YSize = Library:GetTextBounds(text, Library.Font, 14);
+
+    YSize = YSize + 7
+    
+    local NotificationTemplate = Library:Create('Frame', {
+        Parent = Notification_Area,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Size = UDim2.new(0, 0, 0, YSize),
+        ClipsDescendants = true,
+        ZIndex = 100,
+    })
+
+    local Notification_Inner = Library:Create('Frame', {
+        Parent = NotificationTemplate,
+        BackgroundColor3 = Library.MainColor,
+        BorderColor3 = Library.OutlineColor,
+        BorderMode = Enum.BorderMode.Inset,
+        ClipsDescendants = true,
+        Size = UDim2.new(1, 0, 1, 0),
+        ZIndex = 101,
+    })
+
+    local Notification_Label = Library:Create('TextLabel', {
+        Parent = Notification_Inner,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 5, 0, 0),
+        Size = UDim2.new(1, -10, 0, 30),
+        Font = Enum.Font.SourceSansBold,
+        Text = title,
+        TextColor3 = Color3.fromRGB(255, 255, 255),
+        TextSize = 14.000,
+        ZIndex = 102,
+    })
+
+    local Notification_Text = Library:Create('TextLabel', {
+        Parent = Notification_Inner,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 5, 0, 35),
+        Size = UDim2.new(1, -10, 1, -40),
+        Font = Enum.Font.SourceSansBold,
+        Text = text,
+        TextColor3 = Color3.fromRGB(255, 255, 255),
+        TextSize = 12.000,
+        ZIndex = 103,
+    })
+
+    pcall(NotificationTemplate.TweenSize, NotificationTemplate, UDim2.new(0, XSize + 8 + 4, 0, YSize + 80), 'Out', 'Quad', 0.4, true);
+
+    task.spawn(function()
+        wait(times or 3);
+
+        pcall(NotificationTemplate.TweenSize, NotificationTemplate, UDim2.new(0, 0, 0, YSize), 'Out', 'Quad', 0.4, true);
+
+        wait(0.4);
+
+        NotificationTemplate:Destroy();
+    end);
+end
+
+-- Scripts:
+function Library:DragEnabled(isTarget) -- BODY.BodyObject 
+    local script = Instance.new('LocalScript', isTarget);
+    
+    local gui = isTarget;
+    local dragging = false;
+    local dragInput, dragStart, startPos;
+    
+    local function update(input)
+        local delta = input.Position - dragStart;
+        local Pos = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y);
+
+        local Tween = TweenService:Create(gui, TweenInfo(.15), {Position = Pos});
+        Tween:Play();
+    end;
+    
+    gui.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true;
+            dragStart = input.Position;
+            startPos = gui.Position;
+    
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false;
+                end;
+            end);
+        end;
+    end);
+    
+    gui.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input;
+        end;
+    end);
+    
+    UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            update(input);
+        end;
+    end);
+end;
+
+local Toggle = Instance.new("Frame")
+local UICorner = Instance.new("UICorner")
+local ToggleButton = Instance.new("ImageButton")
+
+Toggle.Name = "Toggle"
+Toggle.Parent = BLACKTRAP
+Toggle.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
+Toggle.BackgroundTransparency = 1.000
+Toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Toggle.BorderSizePixel = 0
+Toggle.Position = UDim2.new(0.123021416, 0, 0.243134081, 0)
+Toggle.Size = UDim2.new(0, 40, 0, 40)
+
+UICorner.CornerRadius = UDim.new(0, 1000)
+UICorner.Parent = Toggle
+
+ToggleButton.Name = "ToggleButton"
+ToggleButton.Parent = Toggle
+ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ToggleButton.BackgroundTransparency = 1.000
+ToggleButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+ToggleButton.BorderSizePixel = 0
+ToggleButton.Size = UDim2.new(1, 0, 1, 0)
+ToggleButton.Image = "http://www.roblox.com/asset/?id=129267297340080"
+ToggleButton.ImageColor3 = Color3.fromRGB(255, 0, 0)
+
+function Library:HiddenUI(guiobject, guipartshow, guiparthide)
+    ToggleButton.MouseButton1Click:Connect(function()
+        if guiobject.Size == guipartshow and guiobject.Visible == true then
+
+            Utility:Tween(guiobject, {Size = guiparthide}, .15)
+            wait(.3)
+            guiobject.Visible = false
+
+        elseif guiobject.Size == guiparthide and guiobject.Visible == false then
+
+            guiobject.Visible = true
+            wait(.1)
+            Utility:Tween(guiobject, {Size = guipartshow}, .15)
+
+        end
+    end)
+end
+
+Library:DragEnabled(ToggleButton);
+
+
+function Library:CreateWindow(Version, Pictures)
+
+    local Main_Body = Library:Create('ImageLabel', {
+        Parent = BLACKTRAP,
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        ClipsDescendants = true,
+        Visible = true,
+        Position = UDim2.new(0.5, 0, 0.5, 0),
+        Size = UDim2.new(0, 600, 0, 350),
+        Image = Pictures,
+    })
+
+    Library:Create('UICorner', {
+        CornerRadius = UDim.new(0, 8),
+        Parent = Main_Body,
+    })
+
+    local isPart = {
+        Show = UDim2.new(0, 600, 0, 350),
+        Hide = UDim2.new(0, 0, 0, 0)
+    }
+
+    Library:AddStroke(Main_Body, Contextual, Brown)
+    Library:HiddenUI(Main_Body, isPart.Show, isPart.Hide)
+
+    Library:DragEnabled(Main_Body);
+
+    Library:Create('ImageLabel', {
+        Parent = Main_Body,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 10, 0, 5),
+        Size = UDim2.new(0, 24, 0, 24),
+        Image = "http://www.roblox.com/asset/?id=129267297340080",
+        ImageColor3 = Color3.fromRGB(255, 0, 0),
+    })
+
+    local MainLabel = Library:Create('TextLabel', {
+        Parent = Main_Body,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 40, 0, 3),
+        Size = UDim2.new(0, 419, 0, 30),
+        Font = Enum.Font.SourceSans,
+        Text = GameName.." Version "..Version,
+        TextColor3 = Color3.fromRGB(0, 0, 0),
+        TextSize = 16.000,
+        TextXAlignment = Enum.TextXAlignment.Left,
+    })
+
+    Library:Create('UIStroke', {
+        Parent = MainLabel,
+        ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual,
+        Color = White,
+        Thickness = 5,
+        Transparency = 0.800,
+    })
+
+    local Close = Library:Create('Frame', {
+        Parent = Main_Body,
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 574, 0, 10),
+        Size = UDim2.new(0, 30, 0, 20),
+    })
+
+    Library:AddStroke(Close, Border, Brown)
+
+    Library:AddGradient(Close, Color3.fromRGB(170,0,0), Color3.fromRGB(255,100,100))
+
+    local Close_Button = Library:Create('TextButton', {
+        Parent = Close,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Rotation = 45.000,
+        Size = UDim2.new(1, 0, 1, 0),
+        AutoButtonColor = false,
+        Font = Enum.Font.SourceSansBold,
+        Text = "+",
+        Visible = true,
+        TextColor3 = Color3.fromRGB(255, 255, 255),
+        TextSize = 25.000,
+    })
+
+    Close_Button.MouseEnter:Connect(function()
+        Utility:Tween(Close_Button, {Rotation = 315}, .15)
+    end)
+
+    Close_Button.MouseLeave:Connect(function()
+        Utility:Tween(Close_Button, {Rotation = 45}, .15)
+    end)
+
+    Close_Button.MouseButton1Down:Connect(function()
+        Utility:Tween(Close_Button, {Rotation = 45}, .15)
+    end)
+
+    Close_Button.MouseButton1Up:Connect(function()
+        Utility:Tween(Close_Button, {Rotation = 315}, .15)
+    end)
+
+    Close_Button.MouseButton1Click:Connect(function()
+        Utility:Tween(Main_Body, {Size = UDim2.new(0, 0, 0, 0)}, .15)
+        wait(.3)
+        Main_Body.Visible = false
+    end)
+
+    local Setting_Frame = Library:Create('Frame', {
+        Parent = Main_Body,
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 0.300,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 543, 0, 10),
+        Size = UDim2.new(0, 30, 0, 20),
+    })
+
+    Library:AddStroke(Setting_Frame, Border, Brown)
+
+    Library:AddGradient(Setting_Frame, White, Color3.fromRGB(200,200,200))
+
+    local Setting_Button = Library:Create('ImageButton', {
+        Parent = Setting_Frame,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 5, 0, 0),
+        Size = UDim2.new(0, 20, 0, 20),
+        AutoButtonColor = false,
+        Visible = true,
+        Image = "http://www.roblox.com/asset/?id=76598233534471",
+    })
+
+    Setting_Button.MouseEnter:Connect(function()
+        Utility:Tween(Setting_Frame, {BackgroundTransparency = 0}, .15)
+    end)
+
+    Setting_Button.MouseLeave:Connect(function()
+        Utility:Tween(Setting_Frame, {BackgroundTransparency = 0.300}, .15)
+    end)
+
+    Setting_Button.MouseButton1Down:Connect(function()
+        Utility:Tween(Setting_Frame, {BackgroundTransparency = 0.300}, .15)
+    end)
+
+    Setting_Button.MouseButton1Up:Connect(function()
+        Utility:Tween(Setting_Frame, {BackgroundTransparency = 0}, .15)
+    end)
+
+    local Account_Frame = Library:Create('Frame', {
+        Parent = Main_Body,
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 0.300,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 512, 0, 10),
+        Size = UDim2.new(0, 30, 0, 20),
+    })
+
+    Library:AddStroke(Account_Frame, Border, Brown)
+
+    Library:AddGradient(Account_Frame, White, Color3.fromRGB(200,200,200))
+
+    local Account_Button = Library:Create('ImageButton', {
+        Parent = Account_Frame,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 5, 0, 0),
+        Size = UDim2.new(0, 20, 0, 20),
+        AutoButtonColor = false,
+        Visible = true,
+        Image = "http://www.roblox.com/asset/?id=116287390318710",
+    })
+
+    Account_Button.MouseEnter:Connect(function()
+        Utility:Tween(Account_Frame, {BackgroundTransparency = 0}, .15)
+    end)
+
+    Account_Button.MouseLeave:Connect(function()
+        Utility:Tween(Account_Frame, {BackgroundTransparency = 0.300}, .15)
+    end)
+
+    Account_Button.MouseButton1Down:Connect(function()
+        Utility:Tween(Account_Frame, {BackgroundTransparency = 0.300}, .15)
+    end)
+
+    Account_Button.MouseButton1Up:Connect(function()
+        Utility:Tween(Account_Frame, {BackgroundTransparency = 0}, .15)
+    end)
+
+    --// Account Section
+
+    local Account_Body = Library:Create('ImageLabel', {
+        Parent = Main_Body,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        ClipsDescendants = true,
+        Size = UDim2.new(0, 0, 0, 0),
+        Image = Pictures,
+    })
+
+    Library:Create('UICorner', {
+        CornerRadius = UDim.new(0, 8),
+        Parent = Account_Body,
+    })
+
+    Library:Create('ImageLabel', {
+        Parent = Account_Body,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 10, 0, 5),
+        Size = UDim2.new(0, 24, 0, 24),
+        Image = "http://www.roblox.com/asset/?id=129267297340080",
+        ImageColor3 = Color3.fromRGB(255, 0, 0),
+    })
+
+    local AccLabel = Library:Create('TextLabel', {
+        Parent = Account_Body,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 40, 0, 3),
+        Size = UDim2.new(0, 419, 0, 30),
+        Font = Enum.Font.SourceSans,
+        Text = "Account Manager",
+        TextColor3 = Color3.fromRGB(0, 0, 0),
+        TextSize = 16.000,
+        TextXAlignment = Enum.TextXAlignment.Left,
+    })
+
+    Library:Create('UIStroke', {
+        Parent = AccLabel,
+        ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual,
+        Color = White,
+        Thickness = 5,
+        Transparency = 0.800,
+    })
+
+    local Account_Back_Frame = Library:Create('Frame', {
+        Parent = Account_Body,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 0.300,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 550, 0, 0),
+        Size = UDim2.new(0, 40, 0, 20),
+    })
+
+    Library:AddStroke(Account_Back_Frame, Border, Brown)
+    Library:AddGradient(Account_Back_Frame, White, Color3.fromRGB(200,200,200))
+
+    local Account_Back_Button = Library:Create('ImageButton', {
+        Parent = Account_Back_Frame,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        AutoButtonColor = false,
+        Position = UDim2.new(0, 10, 0, 0),
+        Size = UDim2.new(0, 20, 0, 20),
+        Image = "http://www.roblox.com/asset/?id=126659848375787",
+    })
+
+    Account_Back_Button.MouseEnter:Connect(function()
+        Utility:Tween(Account_Back_Frame, {BackgroundTransparency = 0}, .15)
+    end)
+
+    Account_Back_Button.MouseLeave:Connect(function()
+        Utility:Tween(Account_Back_Frame, {BackgroundTransparency = 0.300}, .15)
+    end)
+
+    Account_Back_Button.MouseButton1Down:Connect(function()
+        Utility:Tween(Account_Back_Frame, {BackgroundTransparency = 0.300}, .15)
+    end)
+
+    Account_Back_Button.MouseButton1Up:Connect(function()
+        Utility:Tween(Account_Back_Frame, {BackgroundTransparency = 0}, .15)
+    end)
+
+    local Account_Inner = Library:Create('Frame', {
+        Parent = Account_Body,
+        BackgroundColor3 = Themes.Default.Background_Outer,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0.0166666675, 0, 0.100000001, 0),
+        Size = UDim2.new(0, 580, 0, 299),
+    })
+
+    Library:AddStroke(Account_Inner, Border, Themes.Default.Lines)
+
+    local AvatarThumbnails = game:GetService("Players"):GetUserThumbnailAsync(UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
+
+    local AccountPic = Library:Create('ImageLabel', {
+        Parent = Account_Inner,
+        BackgroundColor3 = Brown,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 10, 0, 50),
+        Size = UDim2.new(0, 200, 0, 199),
+        Image = AvatarThumbnails,
+    })
+
+    Library:AddStroke(AccountPic, Border, Brown)
+
+    local AccountStatus = Library:Create('TextBox', {
+        Parent = Account_Inner,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 220, 0, 50),
+        Size = UDim2.new(0, 350, 0, 199),
+        ClearTextOnFocus = false,
+        Font = Enum.Font.DenkOne,
+        Text = "",
+        TextColor3 = Themes.Default.Font,
+        TextSize = 14.000,
+        TextXAlignment = Enum.TextXAlignment.Left,
+        TextYAlignment = Enum.TextYAlignment.Center,
+        TextEditable = false,
+    })
+
+    local ServerTimeFunc = {};
+    function ServerTimeFunc:Refresh(timeplay, timeserver)
+
+        AccountStatus.Text = "Account Nickname    : "..DisplayName.."\nAccount User    : "..UserName.."\nAccount ID    : "..UserId.."\nAccount HWID    : "..HWID.."\nAccount Age    : "..GetAccountAge.." days\nAccount Time Left    : "..GetTimeExpired.."\nAccount Status    : "..GetStatus.."\nExploit    : "..GetExploit.." Executor\nServer Time    : "..timeserver.."\nYou have been playing for    : "..timeplay;
+
+    end;
+
+    function UpdateTime()
+        local GameTime = math.floor(workspace.DistributedGameTime+0.5)
+        local Hour = math.floor(GameTime/(60^2))%24
+        local Minute = math.floor(GameTime/(60^1))%60
+        local Second = math.floor(GameTime/(60^0))%60
+        local TimePLaying = string.format("%02d.%02d.%02d", Hour, Minute, Second)
+
+        local dt = DateTime.now()
+        local Universaltime = dt:FormatUniversalTime("LLLL", "en-us")
+
+
+        ServerTimeFunc:Refresh(TimePLaying, Universaltime)
+    end
+    game:GetService('RunService').Heartbeat:Connect(function()
+        UpdateTime()
+    end)
+
+    Library:Create('TextLabel', {
+        Parent = Account_Inner,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Size = UDim2.new(1, 0, 0, 50),
+        Font = Enum.Font.SourceSans,
+        Text = "Account Information",
+        TextColor3 = Color3.fromRGB(100, 100, 100),
+        TextSize = 16.000,
+        TextStrokeColor3 = Color3.fromRGB(180, 180, 180),
+    })
+
+    Library:Create('ImageLabel', {
+        Parent = Account_Inner,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0.327586204, 0, 0.885386825, -10),
+        Size = UDim2.new(0, 200, 0, 40),
+        Image = "http://www.roblox.com/asset/?id=100839726634084",
+    })
+
+
+
+
+
+    --// Setting Section
+
+    local Setting_Body = Library:Create('ImageLabel', {
+        Parent = Main_Body,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        ClipsDescendants = true,
+        Size = UDim2.new(0, 0, 0, 0),
+        Image = Pictures,
+    })
+
+    Library:Create('UICorner', {
+        CornerRadius = UDim.new(0, 8),
+        Parent = Setting_Body,
+    })
+
+    Library:Create('ImageLabel', {
+        Parent = Setting_Body,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 10, 0, 5),
+        Size = UDim2.new(0, 24, 0, 24),
+        Image = "http://www.roblox.com/asset/?id=129267297340080",
+        ImageColor3 = Color3.fromRGB(255, 0, 0),
+    })
+
+    local Setting_Labels = Library:Create('TextLabel', {
+        Parent = Setting_Body,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 40, 0, 3),
+        Size = UDim2.new(0, 419, 0, 30),
+        Font = Enum.Font.SourceSans,
+        Text = "Setting User",
+        TextColor3 = Black,
+        TextSize = 16.000,
+        TextXAlignment = Enum.TextXAlignment.Left,
+    })
+
+    Library:Create('UIStroke', {
+        Parent = Setting_Labels,
+        ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual,
+        Color = White,
+        Thickness = 5,
+        Transparency = 0.800,
+    })
+
+    local Setting_Back_Frame = Library:Create('Frame', {
+        Parent = Setting_Body,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 0.300,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 550, 0, 0),
+        Size = UDim2.new(0, 40, 0, 20),
+    })
+
+    Library:AddStroke(Setting_Back_Frame, Border, Brown)
+    Library:AddGradient(Setting_Back_Frame, White, Color3.fromRGB(200,200,200))
+
+    local Setting_Back_Button = Library:Create('ImageButton', {
+        Parent = Setting_Back_Frame,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        AutoButtonColor = false,
+        Position = UDim2.new(0, 10, 0, 0),
+        Size = UDim2.new(0, 20, 0, 20),
+        Image = "http://www.roblox.com/asset/?id=126659848375787",
+    })
+
+    Setting_Back_Button.MouseEnter:Connect(function()
+        Utility:Tween(Setting_Back_Frame, {BackgroundTransparency = 0}, .15)
+    end)
+
+    Setting_Back_Button.MouseLeave:Connect(function()
+        Utility:Tween(Setting_Back_Frame, {BackgroundTransparency = 0.300}, .15)
+    end)
+
+    Setting_Back_Button.MouseButton1Down:Connect(function()
+        Utility:Tween(Setting_Back_Frame, {BackgroundTransparency = 0.300}, .15)
+    end)
+
+    Setting_Back_Button.MouseButton1Up:Connect(function()
+        Utility:Tween(Setting_Back_Frame, {BackgroundTransparency = 0}, .15)
+    end)
+
+    local Setting_Inner = Library:Create('Frame', {
+        Parent = Setting_Body,
+        BackgroundColor3 = Themes.Default.Background_Outer,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0.0166666675, 0, 0.100000001, 0),
+        Size = UDim2.new(0, 580, 0, 299),
+    })
+    
+    Library:AddStroke(Setting_Inner, Border, Brown)
+
+    local Setting_Scroll = Library:Create('ScrollingFrame', {
+        Parent = Setting_Inner,
+        Active = true,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Size = UDim2.new(1, 0, 1, 0),
+        ScrollBarThickness = 0,
+    })
+
+    local Setting_Scroll_Layout = Library:Create('UIListLayout', {
+        Parent = Setting_Scroll,
+        SortOrder = Enum.SortOrder.LayoutOrder,
+        Padding = UDim.new(0, 2),
+    })
+
+    Setting_Scroll_Layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        Setting_Scroll.CanvasSize = UDim2.new(0, 0, 0, 7 + Setting_Scroll_Layout.Padding.Offset + Setting_Scroll_Layout.AbsoluteContentSize.Y);
+    end);
+
+    Setting_Scroll_Layout.ChildAdded:Connect(function()
+        Setting_Scroll.CanvasSize = UDim2.new(0, 0, 0, 7 + Setting_Scroll_Layout.Padding.Offset + Setting_Scroll_Layout.AbsoluteContentSize.Y);
+    end);
+
+    local Setting_Comunity = Library:Create('Frame', {
+        Parent = Setting_Scroll,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Size = UDim2.new(1, 0, 0, 80),
+    })
+
+    local Discord = Library:Create('TextButton', {
+        Parent = Setting_Comunity,
+        BackgroundColor3 = Color3.fromRGB(85, 85, 255),
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 70, 0, 52),
+        Size = UDim2.new(0, 120, 0, 35),
+        AutoButtonColor = false,
+        Font = Enum.Font.SourceSansBold,
+        Text = "Discord",
+        TextColor3 = Color3.fromRGB(255, 255, 255),
+        TextSize = 15.000,
+    })
+
+    Library:Create('UICorner', {
+        CornerRadius = UDim.new(0, 10000),
+        Parent = Discord,
+    })
+
+    Library:AddStroke(Discord, Border, White)
+
+    Library:AddStroke(Discord, Contextual, Black)
+
+    Discord.MouseEnter:Connect(function()
+        Utility:Tween(Discord, {BackgroundColor3 = Color3.fromRGB(170, 170, 255)}, .15)
+        Utility:Tween(Discord, {Size = UDim2.new(0, 125, 0, 40)}, .15)
+    end)
+
+    Discord.MouseLeave:Connect(function()
+        Utility:Tween(Discord, {BackgroundColor3 = Color3.fromRGB(85, 85, 255)}, .15)
+        Utility:Tween(Discord, {Size = UDim2.new(0, 120, 0, 35)}, .15)
+    end)
+
+    Discord.MouseButton1Down:Connect(function()
+        Utility:Tween(Discord, {BackgroundColor3 = Color3.fromRGB(85, 85, 255)}, .15)
+        Utility:Tween(Discord, {Size = UDim2.new(0, 120, 0, 35)}, .15)
+    end)
+
+    Discord.MouseButton1Up:Connect(function()
+        Utility:Tween(Discord, {BackgroundColor3 = Color3.fromRGB(170, 170, 255)}, .15)
+        Utility:Tween(Discord, {Size = UDim2.new(0, 125, 0, 40)}, .15)
+    end)
+
+    Discord.MouseButton1Click:Connect(function()
+        Discord.Text = "."
+        wait(.5)
+        Discord.Text = ".."
+        wait(.5)
+        Discord.Text = "..."
+        wait(.5)
+        Discord.Text = "Copied."
+        wait(.5)
+        Discord.Text = "Discord"
+        wait(.1)
+        setclipboard('https://discord.gg/blacktrap/')
+    end)
+
+    local Youtube = Library:Create('TextButton', {
+        Parent = Setting_Comunity,
+        BackgroundColor3 = Color3.fromRGB(255, 0, 0),
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 217, 0, 52),
+        Size = UDim2.new(0, 120, 0, 35),
+        AutoButtonColor = false,
+        Font = Enum.Font.SourceSansBold,
+        Text = "Youtube",
+        TextColor3 = Color3.fromRGB(255, 255, 255),
+        TextSize = 15.000,
+    })
+
+    Library:Create('UICorner', {
+        CornerRadius = UDim.new(0, 10000),
+        Parent = Youtube,
+    })
+
+    Library:AddStroke(Youtube, Border, White)
+
+    Library:AddStroke(Youtube, Contextual, Black)
+
+    Youtube.MouseEnter:Connect(function()
+        Utility:Tween(Youtube, {BackgroundColor3 = Color3.fromRGB(255, 170, 170)}, .15)
+        Utility:Tween(Youtube, {Size = UDim2.new(0, 125, 0, 40)}, .15)
+    end)
+
+    Youtube.MouseLeave:Connect(function()
+        Utility:Tween(Youtube, {BackgroundColor3 = Color3.fromRGB(255, 0, 0)}, .15)
+        Utility:Tween(Youtube, {Size = UDim2.new(0, 120, 0, 35)}, .15)
+    end)
+
+    Youtube.MouseButton1Down:Connect(function()
+        Utility:Tween(Youtube, {BackgroundColor3 = Color3.fromRGB(255, 0, 0)}, .15)
+        Utility:Tween(Youtube, {Size = UDim2.new(0, 120, 0, 35)}, .15)
+    end)
+
+    Youtube.MouseButton1Up:Connect(function()
+        Utility:Tween(Youtube, {BackgroundColor3 = Color3.fromRGB(255, 170, 170)}, .15)
+        Utility:Tween(Youtube, {Size = UDim2.new(0, 125, 0, 40)}, .15)
+    end)
+
+    Youtube.MouseButton1Click:Connect(function()
+        Youtube.Text = "."
+        wait(.5)
+        Youtube.Text = ".."
+        wait(.5)
+        Youtube.Text = "..."
+        wait(.5)
+        Youtube.Text = "Copied."
+        wait(.5)
+        Youtube.Text = "Youtube"
+        wait(.1)
+        setclipboard('https://youtube.com/@blacktrapsc/')
+    end)
+
+    local Instagram = Library:Create('TextButton', {
+        Parent = Setting_Comunity,
+        BackgroundColor3 = Color3.fromRGB(255, 100, 255),
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 365, 0, 52),
+        Size = UDim2.new(0, 120, 0, 35),
+        AutoButtonColor = false,
+        Font = Enum.Font.SourceSansBold,
+        Text = "Instagram",
+        TextColor3 = Color3.fromRGB(255, 255, 255),
+        TextSize = 15.000,
+    })
+
+    Library:Create('UICorner', {
+        CornerRadius = UDim.new(0, 10000),
+        Parent = Instagram,
+    })
+
+    Library:AddStroke(Instagram, Border, White)
+
+    Library:AddStroke(Instagram, Contextual, Black)
+
+    Instagram.MouseEnter:Connect(function()
+        Utility:Tween(Instagram, {BackgroundColor3 = Color3.fromRGB(255, 170, 255)}, .15)
+        Utility:Tween(Instagram, {Size = UDim2.new(0, 125, 0, 40)}, .15)
+    end)
+
+    Instagram.MouseLeave:Connect(function()
+        Utility:Tween(Instagram, {BackgroundColor3 = Color3.fromRGB(255, 100, 255)}, .15)
+        Utility:Tween(Instagram, {Size = UDim2.new(0, 120, 0, 35)}, .15)
+    end)
+
+    Instagram.MouseButton1Down:Connect(function()
+        Utility:Tween(Instagram, {BackgroundColor3 = Color3.fromRGB(255, 100, 255)}, .15)
+        Utility:Tween(Instagram, {Size = UDim2.new(0, 120, 0, 35)}, .15)
+    end)
+
+    Instagram.MouseButton1Up:Connect(function()
+        Utility:Tween(Instagram, {BackgroundColor3 = Color3.fromRGB(255, 170, 255)}, .15)
+        Utility:Tween(Instagram, {Size = UDim2.new(0, 125, 0, 40)}, .15)
+    end)
+
+    Instagram.MouseButton1Click:Connect(function()
+        Instagram.Text = "."
+        wait(.5)
+        Instagram.Text = ".."
+        wait(.5)
+        Instagram.Text = "..."
+        wait(.5)
+        Instagram.Text = "Copied."
+        wait(.5)
+        Instagram.Text = "Instagram"
+        wait(.1)
+        setclipboard('https://instagram.com/sanz_1594/')
+    end)
+
+    local Tiktok = Library:Create('TextButton', {
+        Parent = Setting_Comunity,
+        BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 510, 0, 52),
+        Size = UDim2.new(0, 120, 0, 35),
+        AutoButtonColor = false,
+        Font = Enum.Font.SourceSansBold,
+        Text = "Tiktok",
+        TextColor3 = Color3.fromRGB(255, 255, 255),
+        TextSize = 15.000,
+    })
+
+    Library:Create('UICorner', {
+        CornerRadius = UDim.new(0, 10000),
+        Parent = Tiktok,
+    })
+
+    Library:AddStroke(Tiktok, Border, White)
+
+    Library:AddStroke(Tiktok, Contextual, Red)
+
+    Tiktok.MouseEnter:Connect(function()
+        Utility:Tween(Tiktok, {BackgroundColor3 = Color3.fromRGB(100, 100, 100)}, .15)
+        Utility:Tween(Tiktok, {Size = UDim2.new(0, 125, 0, 40)}, .15)
+    end)
+
+    Tiktok.MouseLeave:Connect(function()
+        Utility:Tween(Tiktok, {BackgroundColor3 = Color3.fromRGB(0, 0, 0)}, .15)
+        Utility:Tween(Tiktok, {Size = UDim2.new(0, 120, 0, 35)}, .15)
+    end)
+
+    Tiktok.MouseButton1Down:Connect(function()
+        Utility:Tween(Tiktok, {BackgroundColor3 = Color3.fromRGB(0, 0, 0)}, .15)
+        Utility:Tween(Tiktok, {Size = UDim2.new(0, 120, 0, 35)}, .15)
+    end)
+
+    Tiktok.MouseButton1Up:Connect(function()
+        Utility:Tween(Tiktok, {BackgroundColor3 = Color3.fromRGB(100, 100, 100)}, .15)
+        Utility:Tween(Tiktok, {Size = UDim2.new(0, 125, 0, 40)}, .15)
+    end)
+
+    Tiktok.MouseButton1Click:Connect(function()
+        Tiktok.Text = "."
+        wait(.5)
+        Tiktok.Text = ".."
+        wait(.5)
+        Tiktok.Text = "..."
+        wait(.5)
+        Tiktok.Text = "Copied."
+        wait(.5)
+        Tiktok.Text = "Tiktok"
+        wait(.1)
+        setclipboard('https://tiktok.com/@sanz_1594')
+    end)
+
+    local Follow = Library:Create('TextLabel', {
+        Parent = Setting_Comunity,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 0, 0, 5),
+        Size = UDim2.new(1, 0, 0, 20),
+        Font = Enum.Font.SourceSansBold,
+        Text = "FOLLOW US :",
+        TextColor3 = Color3.fromRGB(100, 100, 100),
+        TextSize = 14.000,
+    })
+
+    Library:AddStroke(Follow, Contextual, White)
+
+    function Library:AddBox(Info)
+        local BoxSetting = {
+            Text = Info.Text;
+            Tooltip = Info.Tooltip;
+            Value = Info.Default;
+            Callback = Info.Callback or function(Value) end;
+        };
+
+        local Setting_Box = Library:Create('Frame', {
+            Parent = Setting_Scroll,
+            BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+            BackgroundTransparency = 1.000,
+            BorderColor3 = Color3.fromRGB(0, 0, 0),
+            BorderSizePixel = 0,
+            Size = UDim2.new(1, 0, 0, 40),
+        })
+
+        local SettingBox_Inner = Library:Create('Frame', {
+            Parent = Setting_Box,
+            BackgroundColor3 = Themes.Default.Menus_Background,
+            BorderColor3 = Color3.fromRGB(0, 0, 0),
+            BorderSizePixel = 0,
+            Position = UDim2.new(0, 5, 0, 5),
+            Size = UDim2.new(1, -10, 0, 35),
+        })
+
+        Library:AddStroke(SettingBox_Inner, Border, Themes.Default.Lines)
+
+        Library:Create('TextLabel', {
+            Parent = SettingBox_Inner,
+            BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+            BackgroundTransparency = 1.000,
+            BorderColor3 = Color3.fromRGB(0, 0, 0),
+            BorderSizePixel = 0,
+            Position = UDim2.new(0, 10, 0, 0),
+            Size = UDim2.new(0, 350, 1, 0),
+            Font = Enum.Font.SourceSansBold,
+            Text = Info.Text,
+            TextColor3 = Themes.Default.Font,
+            TextSize = 14.000,
+            TextXAlignment = Enum.TextXAlignment.Left,
+        })
+
+        local TextBox = Library:Create('TextBox', {
+            Parent = SettingBox_Inner,
+            BackgroundColor3 = Themes.Default.Textbox_Background,
+            BorderColor3 = Color3.fromRGB(0, 0, 0),
+            BorderSizePixel = 0,
+            Position = UDim2.new(0, 457, 0, 5),
+            Size = UDim2.new(0, 100, 0, 25),
+            ClearTextOnFocus = false,
+            Font = Enum.Font.Arcade,
+            Text = Info.Default,
+            TextColor3 = Themes.Default.Textbox_Font,
+            TextSize = 16.000,
+        })
+
+        Library:AddStroke(TextBox, Border, White)
+
+        TextBox.FocusLost:Connect(function(EnterPressed)
+            if not EnterPressed then 
+                return;
+            else
+                Info.Callback(TextBox.Text);
+                Library:AttemptSave();
+            end;
+        end);
+
+        if type(Info.Tooltip) == 'string' then
+            Library:AddToolTip(Info.Tooltip, SettingBox_Inner)
+        end
+
+        return BoxSetting
+    end
+
+    function Library:AddToggle(Info)
+        local ToggleSetting = {
+            Text = Info.Text;
+            Tooltip = Info.Tooltip;
+            Value = Info.Default or false;
+            Callback = Info.Callback or function(Value) end;
+        };
+
+        local Setting_Toggle = Library:Create('Frame', {
+            Parent = Setting_Scroll,
+            BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+            BackgroundTransparency = 1.000,
+            BorderColor3 = Color3.fromRGB(0, 0, 0),
+            BorderSizePixel = 0,
+            Size = UDim2.new(1, 0, 0, 40),
+        })
+
+        local Toggle_Inner = Library:Create('Frame', {
+            Parent = Setting_Toggle,
+            BackgroundColor3 = Themes.Default.Menus_Background,
+            BorderColor3 = Color3.fromRGB(0, 0, 0),
+            BorderSizePixel = 0,
+            Position = UDim2.new(0, 5, 0, 5),
+            Size = UDim2.new(1, -10, 0, 35),
+        })
+
+        Library:AddStroke(Toggle_Inner, Border, Themes.Default.Lines)
+
+        Library:Create('TextLabel', {
+            Parent = Toggle_Inner,
+            BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+            BackgroundTransparency = 1.000,
+            BorderColor3 = Color3.fromRGB(0, 0, 0),
+            BorderSizePixel = 0,
+            Position = UDim2.new(0, 10, 0, 0),
+            Size = UDim2.new(0, 350, 1, 0),
+            Font = Enum.Font.SourceSansBold,
+            Text = Info.Text,
+            TextColor3 = Themes.Default.Font,
+            TextSize = 14.000,
+            TextXAlignment = Enum.TextXAlignment.Left,
+        })
+
+        local TextButton = Library:Create('TextButton', {
+            Parent = Toggle_Inner,
+            BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+            BackgroundTransparency = 1.000,
+            BorderColor3 = Color3.fromRGB(0, 0, 0),
+            BorderSizePixel = 0,
+            Position = UDim2.new(0, 482, 0, 0),
+            Size = UDim2.new(0, 80, 1, 0),
+            AutoButtonColor = false,
+            Font = Enum.Font.SourceSans,
+            Text = "",
+            TextColor3 = Color3.fromRGB(0, 0, 0),
+            TextSize = 1.000,
+        })
+
+        local Outer_Toggle = Library:Create('Frame', {
+            Parent = TextButton,
+            BackgroundColor3 = Color3.fromRGB(255, 0, 0),
+            BorderColor3 = Color3.fromRGB(0, 0, 0),
+            BorderSizePixel = 0,
+            Position = UDim2.new(0, 17, 0, 5),
+            Size = UDim2.new(0, 60, 0, 25),
+        })
+
+        Library:Create('UICorner', {
+            CornerRadius = UDim.new(0, 100000),
+            Parent = Outer_Toggle,
+        })
+
+        Library:AddStroke(Outer_Toggle, Border, White)
+
+        local Inner_Toggle = Library:Create('Frame', {
+            Parent = Outer_Toggle,
+            BackgroundColor3 = Color3.fromRGB(220, 220, 220),
+            BorderColor3 = Color3.fromRGB(0, 0, 0),
+            BorderSizePixel = 0,
+            Size = UDim2.new(0, 23, 0, 23),
+            Position = UDim2.new(0, 1, 0, 1),
+        })
+
+        Library:Create('UICorner', {
+            CornerRadius = UDim.new(0, 100000),
+            Parent = Inner_Toggle,
+        })
+
+        local CheckToggle = false;
+        if Info.Default then
+            Utility:Tween(Outer_Toggle, {BackgroundColor3 = Color3.fromRGB(0, 255, 0)}, .15);
+            Utility:Tween(Inner_Toggle, {Position = UDim2.new(0, 36, 0, 1)}, .15);
+            CheckToggle = not CheckToggle;
+            Info.Callback(CheckToggle);
+        end;
+
+        TextButton.MouseButton1Click:Connect(function()
+            if not CheckToggle then
+                Utility:Tween(Outer_Toggle, {BackgroundColor3 = Color3.fromRGB(0, 255, 0)}, .15);
+                Utility:Tween(Inner_Toggle, {Position = UDim2.new(0, 36, 0, 1)}, .15);
+                Library:AttemptSave();
+            else
+                Utility:Tween(Outer_Toggle, {BackgroundColor3 = Color3.fromRGB(255, 0, 0)}, .15);
+                Utility:Tween(Inner_Toggle, {Position = UDim2.new(0, 1, 0, 1)}, .15);
+            end;
+
+            CheckToggle = not CheckToggle;
+            Info.Callback(CheckToggle);
+        end);
+
+        if type(Info.Tooltip) == 'string' then
+            Library:AddToolTip(Info.Tooltip, Toggle_Inner);
+        end;
+
+        return ToggleSetting
+    end
+
+    function Library:AddButton(Info)
+
+        local ToggleButton = {
+            Text = Info.Text;
+            Tooltip = Info.Tooltip;
+            Callback = Info.Callback or function() end;
+        };
+
+        local SettingButton = Library:Create('Frame', {
+            Parent = Setting_Scroll,
+            BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+            BackgroundTransparency = 1.000,
+            BorderColor3 = Color3.fromRGB(0, 0, 0),
+            BorderSizePixel = 0,
+            Size = UDim2.new(1, 0, 0, 40),
+        })
+
+        local SettingButtonInner = Library:Create('Frame', {
+            Parent = SettingButton,
+            BackgroundColor3 = Themes.Default.Menus_Background,
+            BorderColor3 = Color3.fromRGB(0, 0, 0),
+            BorderSizePixel = 0,
+            Position = UDim2.new(0, 5, 0, 5),
+            Size = UDim2.new(1, -10, 0, 35),
+        })
+
+        Library:AddStroke(SettingButtonInner, Border, Themes.Default.Lines)
+
+        local isTitle = Library:Create('TextLabel', {
+            Parent = SettingButtonInner,
+            BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+            BackgroundTransparency = 1.000,
+            BorderColor3 = Color3.fromRGB(0, 0, 0),
+            BorderSizePixel = 0,
+            Position = UDim2.new(0, 10, 0, 0),
+            Size = UDim2.new(0, 350, 1, 0),
+            Font = Enum.Font.SourceSansBold,
+            Text = Info.Text,
+            TextColor3 = Themes.Default.Font,
+            TextSize = 14.000,
+            TextXAlignment = Enum.TextXAlignment.Left,
+        })
+
+        local FrameButton = Library:Create('Frame', {
+            Parent = SettingButtonInner,
+            BackgroundColor3 = Themes.Default.Setting_Button_Background_Active,
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            BorderColor3 = Color3.fromRGB(0, 0, 0),
+            BorderSizePixel = 0,
+            Position = UDim2.new(0, 498, 0, 17),
+            Size = UDim2.new(0, 120, 0, 25),
+        })
+
+        local Button = Library:Create('TextButton', {
+            Parent = SettingButtonInner,
+            BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+            BackgroundTransparency = 1.000,
+            BorderColor3 = Color3.fromRGB(0, 0, 0),
+            BorderSizePixel = 0,
+            Position = UDim2.new(0, 439, 0, 0),
+            Size = UDim2.new(0, 120, 0, 35),
+            AutoButtonColor = false,
+            Font = Enum.Font.SourceSansBold,
+            Text = "CLICK HERE",
+            TextColor3 = Themes.Default.Setting_Button_Font_Active,
+            TextSize = 14.000,
+        })
+
+        Library:AddStroke(FrameButton, Border, Themes.Default.Lines)
+
+        Button.MouseEnter:Connect(function()
+            Utility:Tween(FrameButton, {BackgroundColor3 = Themes.Default.Setting_Button_Background_Deactive}, .15)
+            Utility:Tween(FrameButton, {Size = UDim2.new(0, 110, 0, 25)}, .15)
+        end)
+
+        Button.MouseLeave:Connect(function()
+            Utility:Tween(FrameButton, {BackgroundColor3 = Themes.Default.Setting_Button_Background_Active}, .15)
+            Utility:Tween(FrameButton, {Size = UDim2.new(0, 120, 0, 25)}, .15)
+        end)
+
+        Button.MouseButton1Down:Connect(function()
+            Utility:Tween(FrameButton, {BackgroundColor3 = Themes.Default.Setting_Button_Background_Active}, .3)
+            Utility:Tween(FrameButton, {Size = UDim2.new(0, 120, 0, 25)}, .3)
+        end)
+
+        Button.MouseButton1Up:Connect(function()
+            Utility:Tween(FrameButton, {BackgroundColor3 = Themes.Default.Setting_Button_Background_Deactive}, .3)
+            Utility:Tween(FrameButton, {Size = UDim2.new(0, 110, 0, 25)}, .3)
+        end)
+
+        Button.MouseButton1Click:Connect(function()
+            Button.Text = "."
+            wait(.3)
+            Button.Text = ".."
+            wait(.3)
+            Button.Text = "..."
+            wait(.3)
+            Button.Text = "CLICK HERE"
+            Info.Callback();
+        end)
+
+        if type(Info.Tooltip) == 'string' then
+            Library:AddToolTip(Info.Tooltip, isTitle);
+        end;
+        return ToggleButton;
+
+    end
+
+    getgenv().Jump = 50
+    Library:AddBox({
+        Text = 'Jump Hack',
+        Tooltip = 'Set the value to make your jump high.',
+        Default = getgenv().Jump,
+        Callback = function(Value)
+            getgenv().Jump = Value
+
+            if getgenv().Jump then
+                game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = getgenv().Jump
+            end
+        end
+    })
+
+    getgenv().SpeedHack = 26
+    Library:AddBox({
+        Text = 'Speed Hack',
+        Tooltip = 'Set the value to make your speed fast.',
+        Default = getgenv().SpeedHack,
+        Callback = function(Value)
+            getgenv().SpeedHack = Value
+
+            if getgenv().SpeedHack then
+                Player.Character.Humanoid.WalkSpeed = getgenv().SpeedHack
+                Player.Character.Humanoid:GetPropertyChangedSignal('WalkSpeed'):Connect(function()
+                    Player.Character.Humanoid.WalkSpeed = getgenv().SpeedHack
+                end)
+            end
+        end
+    })
+    
+    local Flying = false
+
+    function toggleFly()
+        local Camera = workspace.CurrentCamera
+        Flying = not Flying
+        
+        if Flying then
+            local char = Player.Character
+            local rootPart:BasePart = char:WaitForChild('HumanoidRootPart')
+            local hum:Humanoid = char:WaitForChild('Humanoid')
+            hum.PlatformStand = true
+            local currentCF = rootPart.CFrame
+    
+            while Flying and task.wait() do
+                local add = Vector3.new(0,0,0)
+    
+                if UserInputService:IsKeyDown(Enum.KeyCode.W) then add += Camera.CFrame.LookVector end
+                if UserInputService:IsKeyDown(Enum.KeyCode.S) then add -= Camera.CFrame.LookVector end
+                if UserInputService:IsKeyDown(Enum.KeyCode.D) then add += Camera.CFrame.RightVector end
+                if UserInputService:IsKeyDown(Enum.KeyCode.A) then add -= Camera.CFrame.RightVector end
+                if UserInputService:IsKeyDown(Enum.KeyCode.E) then add += Camera.CFrame.UpVector end
+                if UserInputService:IsKeyDown(Enum.KeyCode.Q) then add -= Camera.CFrame.UpVector end
+    
+                rootPart.AssemblyLinearVelocity = Vector3.zero
+                rootPart.AssemblyAngularVelocity = Vector3.zero
+    
+                currentCF += add
+                rootPart.CFrame = CFrame.lookAt(
+                    currentCF.Position,
+                    currentCF.Position + (Camera.CFrame.LookVector * 2)
+                )
+            end
+    
+            hum.PlatformStand = false
+        end
+    end
+
+    Library:AddToggle({
+        Text = 'Flying Hack',
+        Tooltip = 'Use W,A,S,D and camera for run fly',
+        AutoFly = false,
+        Callback = function(Value)
+            AutoFly = Value
+            
+            if AutoFly then
+                toggleFly()
+            else
+                Flying = false
+            end
+        end
+    })
+
+    AntiKick = true
+    Library:AddToggle({
+        Text = 'Anti Kick',
+        Tooltip = 'Make you cannot get kick when AFK.',
+        Default = AntiKick,
+        Callback = function(Value)
+            AntiKick = Value
+            
+            if AntiKick then
+                Player.Idled:connect(function()
+                    game:GetService("VirtualUser"):Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+                    wait(.1)
+                    game:GetService("VirtualUser"):Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+                end)
+            end
+        end
+    })
+
+    Library:AddButton({
+        Text = 'Infine Jump', 
+        Tooltip = 'Make you infine jump.',
+        Callback = function()
+            UserInputService.JumpRequest:Connect(function()
+                Player.Character:FindFirstChildOfClass('Humanoid'):ChangeState("Jumping")
+            end)
+        end
+    })
+
+    Library:AddButton({
+        Text = 'No Clips', 
+        Tooltip = 'Make you no clip.',
+        Callback = function()
+            game:GetService("RunService").Stepped:Connect(function()
+                for i,v in pairs(game:GetService("Players").LocalPlayer.Character:GetDescendants()) do
+                    if v:IsA("BasePart") then
+                        v.CanCollide = false
+                    end
+                end
+            end)
+        end
+    })
+
+    Library:AddButton({
+        Text = 'FPS Boost', 
+        Tooltip = 'Make you game graphich too low.',
+        Callback = function()
+            local a = tick()
+            if not game:IsLoaded() then
+                game.Loaded:Wait()
+            end
+            wait(.1)
+            local g = game
+            local w = g.Workspace
+            local l = g.Lighting
+            local t = w.Terrain
+            t.WaterWaveSize = 0
+            t.WaterWaveSpeed = 0
+            t.WaterReflectance = 0
+            t.WaterTransparency = 0
+            l.GlobalShadows = false
+            l.FogEnd = 9e9
+            l.Brightness = 0
+            settings().Rendering.QualityLevel = "Level01"
+            for i, v in pairs(g:GetDescendants()) do
+                if v:IsA("Part") or v:IsA("Union") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then 
+                    v.Material = Enum.Material.Plastic
+                    v.Reflectance = 0
+                elseif v:IsA("Decal") or v:IsA("Texture") then
+                    v.Transparency = 1
+                elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+                    v.Lifetime = NumberRange.new(0)
+                elseif v:IsA("Explosion") then
+                    v.BlastPressure = 1
+                    v.BlastRadius = 1
+                elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") or v:IsA("Sparkles") then
+                    v.Enabled = false
+                elseif v:IsA("MeshPart") then
+                    v.Material = Enum.Material.Plastic
+                    v.Reflectance = 0
+                    v.TextureID = 10385902758728957
+                elseif v:IsA("BasePart") then
+                    v.Reflectance = 0
+                    v.CastShadow = false
+                end
+            end
+            for i, e in pairs(l:GetChildren()) do
+                if e:IsA("BlurEffect") or e:IsA("SunRaysEffect") or e:IsA("ColorCorrectionEffect") or e:IsA("BloomEffect") or e:IsA("DepthOfFieldEffect") or e:IsA("PostEffect") then
+                    e.Enabled = false
+                end
+            end
+            warn("Low graphics loaded! (" .. math.floor(tick() - a) .. "s)")
+
+        end
+    })
+
+    Library:AddButton({
+        Text = 'Rejoin Server', 
+        Tooltip = 'Rejoin to the same server.',
+        Callback = function()
+            game:GetService("TeleportService"):Teleport(game.PlaceId, Player)
+        end
+    })
+
+    Library:AddButton({
+        Text = 'Hop Server', 
+        Tooltip = 'Rejoin to another server.',
+        Callback = function()
+            loadstring(game:HttpGetAsync("https://lua-library.btteam.net/Path/HopServer.lua"))()
+        end
+    })
+
+    Library:AddButton({
+        Text = 'Destroy UI', 
+        Tooltip = 'Destroy UI and rejoin game for make sure nothing bug.',
+        Callback = function()
+            
+            Library:DestroyGUI()
+
+        end
+    })
+
+    function Library:ChangeBackground(isBackground)
+        Main_Body.Image = isBackground
+        Account_Body.Image = isBackground
+        Setting_Body.Image = isBackground
+    end
+
+    --// Main Inner
+
+    local Inner_Body = Library:Create('Frame', {
+        Parent = Main_Body,
+        BackgroundColor3 = Themes.Default.Background_Outer,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        ClipsDescendants = true,
+        Position = UDim2.new(0, 10, 0, 40),
+        Size = UDim2.new(0, 580, 0, 299),
+        Visible = true,
+    })
+    
+    Library:AddStroke(Inner_Body, Border, Themes.Default.Lines)
+
+    Account_Button.MouseButton1Click:Connect(function()
+        Utility:Tween(Account_Body, {Size = UDim2.new(1, 0, 1, 0)}, .15)
+        Close_Button.Visible = false
+        Account_Button.Visible = false
+        Setting_Button.Visible = false
+        Inner_Body.Visible = false
+    end)
+    
+    Account_Back_Button.MouseButton1Click:Connect(function()
+        Utility:Tween(Account_Body, {Size = UDim2.new(0, 0, 0, 0)}, .15)
+        Close_Button.Visible = true
+        Account_Button.Visible = true
+        Setting_Button.Visible = true
+        Inner_Body.Visible = true
+    end)
+    
+    Setting_Button.MouseButton1Click:Connect(function()
+        Utility:Tween(Setting_Body, {Size = UDim2.new(1, 0, 1, 0)}, .15)
+        Close_Button.Visible = false
+        Account_Button.Visible = false
+        Setting_Button.Visible = false
+        Inner_Body.Visible = false
+    end)
+    
+    Setting_Back_Button.MouseButton1Click:Connect(function()
+        Utility:Tween(Setting_Body, {Size = UDim2.new(0, 0, 0, 0)}, .15)
+        Close_Button.Visible = true
+        Account_Button.Visible = true
+        Setting_Button.Visible = true
+        Inner_Body.Visible = true
+    end)
+
+    Library:Create('TextLabel', {
+        Parent = Inner_Body,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 110, 0, 5),
+        Size = UDim2.new(0, 135, 0, 25),
+        Font = Enum.Font.SourceSans,
+        Text = "Hotkeys and Functions :",
+        TextColor3 = Themes.Default.Font,
+        TextSize = 12.000,
+        TextXAlignment = Enum.TextXAlignment.Left,
+    })
+
+    local MainTabLabel = Library:Create('TextLabel', {
+        Parent = Inner_Body,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 5, 0, 5),
+        Size = UDim2.new(0, 100, 0, 25),
+        Font = Enum.Font.SourceSans,
+        Text = "",
+        TextColor3 = Themes.Default.Font,
+        TextSize = 12.000,
+        TextXAlignment = Enum.TextXAlignment.Left,
+    })
+
+    --// Frame Search
+    local Frame_Search = Library:Create('Frame', {
+        Parent = Inner_Body,
+        BackgroundColor3 = Themes.Default.Frame_Search,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 325, 0, 5),
+        Size = UDim2.new(0, 250, 0, 20),
+    })
+
+    Library:AddStroke(Frame_Search, Border, Themes.Default.Lines)
+
+    local Box_Search = Library:Create('TextBox', {
+        Parent = Frame_Search,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 3, 0, 0),
+        Size = UDim2.new(0, 220, 1, 0),
+        Font = Enum.Font.SourceSans,
+        PlaceholderColor3 = Color3.fromRGB(170, 170, 170),
+        PlaceholderText = "Search here....",
+        Text = "",
+        TextColor3 = Themes.Default.Font,
+        TextSize = 12.000,
+        TextXAlignment = Enum.TextXAlignment.Left,
+    })
+
+    Library:Create('ImageLabel', {
+        Parent = Frame_Search,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 233, 0, 3),
+        Size = UDim2.new(0, 14, 0, 14),
+        Image = "http://www.roblox.com/asset/?id=119863900355216",
+    })
+
+    --// Frame Tabs
+    local Frame_Tab = Library:Create('Frame', {
+        Parent = Inner_Body,
+        BackgroundColor3 = Color3.fromRGB(215, 215, 215),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 5, 0, 30),
+        Size = UDim2.new(0, 100, 0, 265),
+    })
+
+    --// Frame Section
+    local Frame_Section_Outer = Library:Create('Frame', {
+        Parent = Inner_Body,
+        BackgroundColor3 = Color3.fromRGB(215, 215, 215),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 110, 0, 30),
+        Size = UDim2.new(0, 465, 0, 265),
+    })
+
+    --// Scrolling Tabs
+    local Scrolling_Tab = Library:Create('ScrollingFrame', {
+        Parent = Frame_Tab,
+        Active = true,
+        BackgroundColor3 = Themes.Default.Scrolling_Tab_Background,
+        BorderColor3 = Color3.fromRGB(0, 0, 0),
+        BorderSizePixel = 0,
+        Position = UDim2.new(0, 0, 0, 0),
+        Size = UDim2.new(1, 0, 1, 0),
+        ScrollBarThickness = 0,
+    })
+
+    Library:AddStroke(Scrolling_Tab, Border, Themes.Default.Lines)
+
+    local Layout_Tab = Library:Create('UIListLayout', {
+        Parent = Scrolling_Tab,
+        SortOrder = Enum.SortOrder.LayoutOrder,
+        Padding = UDim.new(0, 1),
+    })
+
+    Layout_Tab:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        Scrolling_Tab.CanvasSize = UDim2.new(0, 0, 0, 3 + Layout_Tab.Padding.Offset + Layout_Tab.AbsoluteContentSize.Y);
+    end);
+
+    Scrolling_Tab.ChildAdded:Connect(function()
+        Scrolling_Tab.CanvasSize = UDim2.new(0, 0, 0, 3 + Layout_Tab.Padding.Offset + Layout_Tab.AbsoluteContentSize.Y);
+    end);
+
+    
+    --// Addon Tab
+    local AddonTab = {}
+    local isFirstTab = true
+
+    function AddonTab:AddTab(isTitle, isIcon)
+
+        local Outer_Tab = Library:Create('Frame', {
+            Parent = Scrolling_Tab,
+            BackgroundColor3 = Color3.fromRGB(240, 240, 240),
+            BackgroundTransparency = 1.000,
+            BorderColor3 = Color3.fromRGB(0, 0, 0),
+            BorderSizePixel = 0,
+            Size = UDim2.new(0, 100, 0, 23),
+        })
+
+        local Inner_Tab = Library:Create('Frame', {
+            Parent = Outer_Tab,
+            BackgroundColor3 = Themes.Default.Inner_Tab_Background,
+            BorderColor3 = Color3.fromRGB(0, 0, 0),
+            BorderSizePixel = 0,
+            Position = UDim2.new(0, 3, 0, 3),
+            Size = UDim2.new(1, -6, 0, 20),
+        })
+
+        Library:AddStroke(Inner_Tab, Border, Themes.Default.Lines)
+
+        local Tab_Icons = Library:Create('ImageLabel', {
+            Parent = Inner_Tab,
+            BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+            BackgroundTransparency = 1.000,
+            BorderColor3 = Color3.fromRGB(0, 0, 0),
+            BorderSizePixel = 0,
+            Position = UDim2.new(0, 2, 0, 3),
+            Size = UDim2.new(0, 14, 0, 14),
+            Image = isIcon,
+            ImageColor3 = Themes.Default.Font,
+        })
+
+        local Tab_Buttons = Library:Create('TextButton', {
+            Parent = Inner_Tab,
+            BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+            BackgroundTransparency = 1.000,
+            BorderColor3 = Color3.fromRGB(0, 0, 0),
+            BorderSizePixel = 0,
+            Position = UDim2.new(0, 20, 0, 0),
+            Size = UDim2.new(0, 80, 0, 20),
+            Font = Enum.Font.SourceSans,
+            Text = isTitle,
+            TextColor3 = Themes.Default.Font,
+            TextSize = 12.000,
+            TextXAlignment = Enum.TextXAlignment.Left,
+            AutoButtonColor = false,
+        })
+
+        local Frame_Section_Inner = Library:Create('Frame', {
+            Parent = Frame_Section_Outer,
+            BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+            BackgroundTransparency = 1.000,
+            BorderColor3 = Color3.fromRGB(0, 0, 0),
+            BorderSizePixel = 0,
+            Size = UDim2.new(1, 0, 1, 0),
+            Position = UDim2.new(0, 0, 0, 0),
+            Visible = false,
+        })
+
+        local Frame_Section_Inner_Layout = Library:Create('UIListLayout', {
+            Parent = Frame_Section_Inner,
+            SortOrder = Enum.SortOrder.LayoutOrder,
+            FillDirection = Enum.FillDirection.Horizontal,
+            Padding = UDim.new(0, 5),
+        })
+
+        Frame_Section_Inner_Layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+            Frame_Section_Inner.Size = UDim2.new(0, 0 + Frame_Section_Inner_Layout.AbsoluteContentSize.X + Frame_Section_Inner_Layout.Padding.Offset, 1, 0)
+        end)
+    
+        Frame_Section_Inner.ChildAdded:Connect(function()
+            Frame_Section_Inner.Size = UDim2.new(0, 0 + Frame_Section_Inner_Layout.AbsoluteContentSize.X + Frame_Section_Inner_Layout.Padding.Offset, 1, 0)
+        end)
+
+        if isFirstTab then
+            isFirstTab = false;
+            Inner_Tab.BackgroundColor3 = Themes.Default.Background_Active
+            Tab_Icons.ImageColor3 = Themes.Default.Item_Active
+            Tab_Buttons.TextColor3 = Themes.Default.Item_Active
+            MainTabLabel.Text = "Tabs : "..isTitle
+            Frame_Section_Inner.Visible = true
+        end
+
+        Tab_Buttons.MouseButton1Click:Connect(function()
+            for _,v in next, Scrolling_Tab:GetChildren() do
+                if v:IsA('Frame') then
+                    for ___,k in next, v:GetChildren() do
+                        if k:IsA('Frame') then
+
+                            Utility:Tween(k, {BackgroundColor3 = Themes.Default.Background_Deactive}, .10)
+                            MainTabLabel.Text = ""
+
+                            for zz,xx in next, k:GetChildren() do
+                                if xx:IsA('TextButton') then
+                                    Utility:Tween(xx, {TextColor3 = Themes.Default.Item_Deactive}, .10);
+                                end
+                                if xx:IsA('ImageLabel') then
+                                    Utility:Tween(xx, {ImageColor3 = Themes.Default.Item_Deactive}, .10);
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+
+            for _,v in next, Frame_Section_Outer:GetChildren() do
+                if v:IsA('Frame') then
+                    Utility:Tween(v, {Position = UDim2.new(0, 500, 0, 0)}, .10);
+                    Frame_Section_Inner.Visible = false
+                end
+            end
+
+            Utility:Tween(Inner_Tab, {BackgroundColor3 = Themes.Default.Background_Active}, .10);
+            Utility:Tween(Tab_Icons, {ImageColor3 = Themes.Default.Item_Active}, .10);
+            Utility:Tween(Tab_Buttons, {TextColor3 = Themes.Default.Item_Active}, .10);
+            MainTabLabel.Text = "Tabs : "..isTitle
+            Frame_Section_Inner.Visible = true
+            Utility:Tween(Frame_Section_Inner, {Position = UDim2.new(0, 0, 0, 0)}, .10);
+        end)
+
+
+        --// Addon Section
+        local AddonSection = {}
+        function AddonSection:AddSection()
+
+            local Section_Scroll = Library:Create('ScrollingFrame', {
+                Parent = Frame_Section_Inner,
+                Active = true,
+                BackgroundColor3 = Themes.Default.Scrolling_Tab_Background,
+                BorderColor3 = Color3.fromRGB(0, 0, 0),
+                BorderSizePixel = 0,
+                Size = UDim2.new(0, 230, 0, 265),
+                ScrollBarThickness = 0,
+            })
+
+            Library:AddStroke(Section_Scroll, Border, Themes.Default.Lines)
+
+            local Section_Scroll_Layout = Library:Create('UIListLayout', {
+                Parent = Section_Scroll,
+                SortOrder = Enum.SortOrder.LayoutOrder,
+                Padding = UDim.new(0, 10),
+            })
+
+            Section_Scroll_Layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+                Section_Scroll.CanvasSize = UDim2.new(0, 0, 0, Section_Scroll_Layout.Padding.Offset + Section_Scroll_Layout.AbsoluteContentSize.Y + 6);
+            end)
+        
+            Section_Scroll.ChildAdded:Connect(function()
+                Section_Scroll.CanvasSize = UDim2.new(0, 0, 0, Section_Scroll_Layout.Padding.Offset + Section_Scroll_Layout.AbsoluteContentSize.Y + 6);
+            end)
+            
+            --// Addon Group
+            local AddonGroup = {}
+            function AddonGroup:AddGroup(isGroupTitle)
+
+                local Group_Outer = Library:Create('Frame', {
+                    Parent = Section_Scroll,
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    BackgroundTransparency = 1.000,
+                    BorderColor3 = Color3.fromRGB(0, 0, 0),
+                    BorderSizePixel = 0,
+                    Size = UDim2.new(1, 0, 0, 36),
+                })
+
+                local Group_Inner = Library:Create('Frame', {
+                    Parent = Group_Outer,
+                    BackgroundColor3 = Themes.Default.Group_Inner_Background,
+                    BorderColor3 = Color3.fromRGB(0, 0, 0),
+                    BorderSizePixel = 0,
+                    Position = UDim2.new(0, 5, 0, 6),
+                    Size = UDim2.new(1, -10, 0, 31),
+                })
+
+                Library:AddStroke(Group_Inner, Border, Themes.Default.Lines)
+
+                local Group_Inner_Layout = Library:Create('UIListLayout', {
+                    Parent = Group_Inner,
+                    SortOrder = Enum.SortOrder.LayoutOrder,
+                    Padding = UDim.new(0,5),
+                })
+
+                Library:Create('TextLabel', {
+                    Parent = Group_Inner,
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    BackgroundTransparency = 1.000,
+                    BorderColor3 = Color3.fromRGB(0, 0, 0),
+                    BorderSizePixel = 0,
+                    Size = UDim2.new(1, 0, 0, 20),
+                    Font = Enum.Font.Arcade,
+                    Text = isGroupTitle,
+                    TextColor3 = Themes.Default.Font,
+                    TextSize = 10.000,
+                })
+
+                Group_Outer.Size = UDim2.new(1, 0, 0, Group_Inner_Layout.AbsoluteContentSize.Y + Group_Inner_Layout.Padding.Offset + 6)
+                Group_Inner.Size = UDim2.new(1, -10, 0, Group_Inner_Layout.AbsoluteContentSize.Y + Group_Inner_Layout.Padding.Offset + 6)
+                Group_Inner_Layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+                    Group_Outer.Size = UDim2.new(1, 0, 0, Group_Inner_Layout.AbsoluteContentSize.Y + Group_Inner_Layout.Padding.Offset + 6)
+                    Group_Inner.Size = UDim2.new(1, -10, 0, Group_Inner_Layout.AbsoluteContentSize.Y + Group_Inner_Layout.Padding.Offset + 6)
+                end);
+                
+                local function SectionScrollChanged()
+                    local GIL = 0
+                    GIL = Group_Inner_Layout.AbsoluteContentSize.Y
+                    
+                    Section_Scroll.CanvasSize = UDim2.new(0, 0, 0, GIL + Group_Inner_Layout.Padding.Offset + 6)
+                end
+
+                local function groupsizechange()
+
+                    Group_Outer.Size = UDim2.new(1, 0, 0, Group_Inner_Layout.AbsoluteContentSize.Y + Group_Inner_Layout.Padding.Offset + 6)
+                    Group_Inner.Size = UDim2.new(1, -10, 0, Group_Inner_Layout.AbsoluteContentSize.Y + Group_Inner_Layout.Padding.Offset + 6)
+                    
+                end
+
+                SectionScrollChanged()
+                groupsizechange()
+
+                --// Addon Menu
+                local AddonMenu = {}
+                function AddonMenu:AddButton(Info)
+                    local Button = {
+                        Text = Info.Text;
+                        Tooltip = Info.Tooltip;
+                        Callback = Info.Callback or function() end;
+                    }
+
+                    local Button_Outer = Library:Create('Frame', {
+                        Parent = Group_Inner,
+                        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                        BackgroundTransparency = 1.000,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Size = UDim2.new(1, 0, 0, 20),
+                    })
+
+                    local Button_Inner = Library:Create('Frame', {
+                        Parent = Button_Outer,
+                        AnchorPoint = Vector2.new(0.5, 0.5),
+                        BackgroundColor3 = Themes.Default.Background_Deactive,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Position = UDim2.new(0, 110, 0, 10),
+                        Size = UDim2.new(1, -10, 1, 0),
+                    })
+
+                    Library:AddStroke(Button_Inner, Border, Themes.Default.Lines)
+
+                    local Main_Button = Library:Create('TextButton', {
+                        Parent = Button_Inner,
+                        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                        BackgroundTransparency = 1.000,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Size = UDim2.new(1, 0, 1, 0),
+                        Font = Enum.Font.SourceSans,
+                        TextColor3 = Themes.Default.Item_Deactive,
+                        TextSize = 12.000,
+                        AutoButtonColor = false,
+                        Text = Info.Text,
+                    })
+
+                    Main_Button.MouseEnter:Connect(function()
+                        Utility:Tween(Button_Inner, {BackgroundColor3 = Themes.Default.Background_Active}, .15);
+                        Utility:Tween(Main_Button, {TextColor3 = Themes.Default.Item_Active}, .15);
+                        Utility:Tween(Button_Inner, {Size = UDim2.new(1, -20, 1, 0)}, .15);
+                    end);
+
+                    Main_Button.MouseLeave:Connect(function()
+                        Utility:Tween(Button_Inner, {BackgroundColor3 = Themes.Default.Background_Deactive}, .15);
+                        Utility:Tween(Main_Button, {TextColor3 = Themes.Default.Item_Deactive}, .15);
+                        Utility:Tween(Button_Inner, {Size = UDim2.new(1, -10, 1, 0)}, .15);
+                    end);
+
+                    Main_Button.MouseButton1Down:Connect(function()
+                        Utility:Tween(Button_Inner, {BackgroundColor3 = Themes.Default.Background_Deactive}, .15);
+                        Utility:Tween(Main_Button, {TextColor3 = Themes.Default.Item_Deactive}, .15);
+                        Utility:Tween(Button_Inner, {Size = UDim2.new(1, -10, 1, 0)}, .15);
+                    end)
+
+                    Main_Button.MouseButton1Up:Connect(function()
+                        Utility:Tween(Button_Inner, {BackgroundColor3 = Themes.Default.Background_Active}, .15);
+                        Utility:Tween(Main_Button, {TextColor3 = Themes.Default.Item_Active}, .15);
+                        Utility:Tween(Button_Inner, {Size = UDim2.new(1, -20, 1, 0)}, .15);
+                    end)
+
+                    Main_Button.MouseButton1Click:Connect(function()
+                        Button.Callback();
+                    end);
+
+                    if type(Info.Tooltip) == 'string' then
+                        Library:AddToolTip(Info.Tooltip, Button_Inner);
+                    end;
+
+                    return Button;
+                end
+
+                --// Create Checkbox
+                function AddonMenu:AddCheckbox(Idx, Info)
+                    local Checkbox = {
+                        Type = 'Checkbox';
+                        Text = Info.Text;
+                        Tooltip = Info.Tooltip;
+                        Value = Info.Default or false;
+                        Callback = Info.Callback or function(Value) end;
+                    };
+
+                    local Frame_Outer = Library:Create('Frame', {
+                        Parent = Group_Inner,
+                        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                        BackgroundTransparency = 1.000,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Size = UDim2.new(1, 0, 0, 20),
+                    })
+
+                    local Frame_Inner = Library:Create('Frame', {
+                        Parent = Frame_Outer,
+                        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                        BackgroundTransparency = 1.000,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Position = UDim2.new(0, -1, 0, 0),
+                        Size = UDim2.new(1, -4, 1, 0),
+                    })
+
+                    local Checkbox_Button = Library:Create('TextButton', {
+                        Parent = Frame_Inner,
+                        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                        BackgroundTransparency = 1.000,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Size = UDim2.new(1, 0, 0, 20),
+                        AutoButtonColor = false,
+                        Font = Enum.Font.SourceSans,
+                        Text = "",
+                        TextColor3 = Color3.fromRGB(0, 0, 0),
+                        TextSize = 14.000,
+                    })
+
+                    local Check_Outer = Library:Create('Frame', {
+                        Parent = Checkbox_Button,
+                        BackgroundColor3 = Themes.Default.Background_Deactive,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Position = UDim2.new(0, 6, 0, 6),
+                        Size = UDim2.new(0, 12, 0, 12),
+                    })
+
+                    Library:AddStroke(Check_Outer, Border, Themes.Default.Lines)
+
+                    local Check_Inner = Library:Create('ImageLabel', {
+                        Parent = Check_Outer,
+                        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                        BackgroundTransparency = 1.000,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Size = UDim2.new(0, 12, 0, 12),
+                        Image = "http://www.roblox.com/asset/?id=18664334374",
+                        ImageColor3 = Themes.Default.Item_Active,
+                        Visible = false,
+                    })
+
+                    local Checkbox_Label = Library:Create('TextLabel', {
+                        Parent = Frame_Inner,
+                        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                        BackgroundTransparency = 1.000,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Position = UDim2.new(0, 26, 0, 6),
+                        Size = UDim2.new(0, 190, 0, 12),
+                        Font = Enum.Font.SourceSans,
+                        Text = Info.Text,
+                        TextColor3 = Themes.Default.Item_Deactive,
+                        TextSize = 12.000,
+                        TextXAlignment = Enum.TextXAlignment.Left,
+                    })
+
+                    
+                    --[[local Checkbox_function = false;
+                        if Info.Default then
+                        Check_Outer.BackgroundColor3 = Color3.fromRGB(220, 220, 255)
+                        Check_Inner.Visible = true
+                        Checkbox_function = not Checkbox_function;
+                        Info.Callback(Checkbox_function);
+                    end;]]
+
+                    Checkbox_Button.MouseEnter:Connect(function()
+                        Utility:Tween(Checkbox_Label, {TextColor3 = Themes.Default.Item_Active}, .15)
+                    end)
+
+                    Checkbox_Button.MouseLeave:Connect(function()
+                        Utility:Tween(Checkbox_Label, {TextColor3 = Themes.Default.Item_Deactive}, .15)
+                    end)
+
+                    function Checkbox:SetValue(Bool)
+                        Bool = (not not Bool);
+                        Checkbox.Value = Bool;
+
+                        if not Bool then
+                            Check_Outer.BackgroundColor3 = Themes.Default.Background_Deactive
+                            Check_Inner.Visible = false
+                        else
+                            Check_Outer.BackgroundColor3 = Themes.Default.Background_Active
+                            Check_Inner.Visible = true
+                        end
+
+                        Checkbox.Callback(Checkbox.Value);
+                    end
+
+                    Checkbox_Button.MouseButton1Click:Connect(function()
+                        if not Checkbox.Value then
+                            Check_Outer.BackgroundColor3 = Themes.Default.Background_Active
+                            Check_Inner.Visible = true
+                        else
+                            Check_Outer.BackgroundColor3 = Themes.Default.Background_Deactive
+                            Check_Inner.Visible = false
+                        end;
+
+                        Library:AttemptSave();
+                        Checkbox.Value = not Checkbox.Value;
+                        Checkbox.Callback(Checkbox.Value);
+                    end);
+
+                    if type(Info.Tooltip) == 'string' then
+                        Library:AddToolTip(Info.Tooltip, Checkbox_Label);
+                    end;
+                    
+                    Checkboxs[Idx] = Checkbox;
+
+                    return Checkbox;
+                end
+
+                
+                --// Add Dropdown
+                function AddonMenu:AddDropdown(Idx, Info)
+
+                    local Dropdown = {
+                        Type = 'Dropdown';
+                        Text = Info.Text;
+                        Tooltip = Info.Tooltip;
+                        List = Info.List;
+                        Multi = Info.Multi;
+                        Value = Info.Multi and {};
+                        Callback = Info.Callback or function(Value) end;
+                    };
+
+                    local Dropdown_Outer = Library:Create('Frame', {
+                        Parent = Group_Inner,
+                        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                        BackgroundTransparency = 1.000,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Size = UDim2.new(1, 0, 0, 20),
+                    })
+
+                    local Dropdown_Inner = Library:Create('Frame', {
+                        Parent = Dropdown_Outer,
+                        BackgroundColor3 = Themes.Default.Background_Deactive,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Position = UDim2.new(0, 5, 0, 0),
+                        Size = UDim2.new(1, -10, 0, 20),
+                    })
+
+                    Library:AddStroke(Dropdown_Inner, Border, Themes.Default.Lines)
+
+                    local Title_Dropdown = Library:Create('TextLabel', {
+                        Parent = Dropdown_Inner,
+                        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                        BackgroundTransparency = 1.000,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Position = UDim2.new(0, 3, 0, 0),
+                        Size = UDim2.new(0, 190, 0, 20),
+                        Font = Enum.Font.SourceSans,
+                        Text = Info.Text,
+                        TextColor3 = Themes.Default.Item_Deactive,
+                        TextSize = 12.000,
+                        TextXAlignment = Enum.TextXAlignment.Left,
+                    })
+
+                    local Arrow_Button = Library:Create('TextButton', {
+                        Parent = Dropdown_Inner,
+                        BackgroundColor3 = Themes.Default.Background_Active,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Position = UDim2.new(0, 198, 0, 0),
+                        Size = UDim2.new(0, 12, 0, 20),
+                        AutoButtonColor = false,
+                        Font = Enum.Font.SourceSans,
+                        Text = "",
+                        TextColor3 = Color3.fromRGB(0, 0, 0),
+                        TextSize = 14.000,
+                    })
+
+                    Library:AddStroke(Arrow_Button, Border, Themes.Default.Lines)
+
+                    local Arrow_Icon = Library:Create('ImageLabel', {
+                        Parent = Arrow_Button,
+                        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                        BackgroundTransparency = 1.000,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Position = UDim2.new(0, 0, 0, 4),
+                        Size = UDim2.new(0, 12, 0, 12),
+                        Image = "http://www.roblox.com/asset/?id=293296862",
+                        ImageColor3 = Themes.Default.Item_Active,
+                        Rotation = 0,
+                    })
+
+                    local Main_Dropdown = Library:Create('Frame', {
+                        Parent = Group_Inner,
+                        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                        BackgroundTransparency = 1.000,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Size = UDim2.new(1, 0, 0, 0),
+                        Visible = false
+                    })
+
+                    local Frame_Dropdown = Library:Create('Frame', {
+                        Parent = Main_Dropdown,
+                        BackgroundColor3 = Themes.Default.Background_Deactive,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Position = UDim2.new(0, 5, 0, -5),
+                        Size = UDim2.new(1, -23, 0, 0),
+                    })
+
+                    Library:AddStroke(Frame_Dropdown, Border, Themes.Default.Lines)
+
+                    local Frame_Dropdown_Layout = Library:Create('UIListLayout', {
+                        Parent = Frame_Dropdown,
+                        SortOrder = Enum.SortOrder.LayoutOrder,
+                        Padding = UDim.new(0,3)
+                    })
+
+                    local Dropdown_Button = true;
+                    Arrow_Button.MouseButton1Click:Connect(function()
+                        if Dropdown_Button then
+                            Arrow_Icon.Rotation = 180;
+                            Main_Dropdown.Visible = true;
+
+                            Utility:Tween(Main_Dropdown, {Size = UDim2.new(1, 0, 0, 0 + Frame_Dropdown_Layout.AbsoluteContentSize.Y)}, .15);
+                            Utility:Tween(Frame_Dropdown, {Size = UDim2.new(1, -23, 0, 0 + Frame_Dropdown_Layout.AbsoluteContentSize.Y)}, .15);
+
+                        else
+                            Arrow_Icon.Rotation = 0;
+                            Utility:Tween(Main_Dropdown, {Size = UDim2.new(1, 0, 0, 0)}, .15);
+                            Utility:Tween(Frame_Dropdown, {Size = UDim2.new(1, -23, 0, 0)}, .15);
+                            Main_Dropdown.Visible = false;
+                        end;
+                        Dropdown_Button = not Dropdown_Button;
+                        
+                    end);
+
+                    if type(Info.Tooltip) == 'string' then
+                        Library:AddToolTip(Info.Tooltip, Title_Dropdown);
+                    end;
+
+                    function Dropdown:Display()
+                        local Values = Dropdown.List;
+                        local Str = '';
+            
+                        if Info.Multi then
+                            for Idx, Value in next, Values do
+                                if Dropdown.Value[Value] then
+                                    Str = Str .. Value .. ', ';
+                                end;
+                            end;
+            
+                            Str = Str:sub(1, #Str - 2);
+                        else
+                            Str = Dropdown.Value or '';
+                        end;
+            
+                        Title_Dropdown.Text = Dropdown.Text..' - '..Str
+                    end;
+
+                    function Dropdown:GetActiveValues()
+                        if Info.Multi then
+                            local T = {};
+            
+                            for Value, Bool in next, Dropdown.Value do
+                                table.insert(T, Value);
+                            end;
+            
+                            return T;
+                        else
+                            return Dropdown.Value and 1 or 0;
+                        end;
+                    end;
+
+                    function Dropdown:BuildDropdownList()
+
+                        local Values = Dropdown.List
+                        local Buttons = {};
+
+                        for ___,oldlist in pairs(Frame_Dropdown:GetChildren()) do
+                            if oldlist:IsA('Frame') then
+                                oldlist:Destroy()
+                                Title_Dropdown.Text = Dropdown.Text
+                            end
+                        end
+
+                        for Idx, Value in next, Values do
+
+                            local Table = {};
+
+                            local List_Frame = Library:Create('Frame', {
+                                Parent = Frame_Dropdown,
+                                BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                                BackgroundTransparency = 1.000,
+                                BorderColor3 = Color3.fromRGB(0, 0, 0),
+                                BorderSizePixel = 0,
+                                Size = UDim2.new(1, 0, 0, 20),
+                            })
+
+                            local Dropdown_Check_Outer = Library:Create('Frame', {
+                                Parent = List_Frame,
+                                BackgroundColor3 = Themes.Default.Background_Deactive,
+                                BorderColor3 = Color3.fromRGB(0, 0, 0),
+                                BorderSizePixel = 0,
+                                Position = UDim2.new(0, 6, 0, 4),
+                                Size = UDim2.new(0, 12, 0, 12),
+                            })
+                        
+                            Library:AddStroke(Dropdown_Check_Outer, Border, Themes.Default.Lines)
+
+                            local Dropdown_Check_Inner = Library:Create('ImageLabel', {
+                                Parent = Dropdown_Check_Outer,
+                                BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                                BackgroundTransparency = 1.000,
+                                BorderColor3 = Color3.fromRGB(0, 0, 0),
+                                BorderSizePixel = 0,
+                                Size = UDim2.new(0, 12, 0, 12),
+                                Image = "http://www.roblox.com/asset/?id=18664334374",
+                                ImageColor3 = Themes.Default.Item_Active,
+                                Visible = false,
+                            })
+                        
+                            local Dropdown_List_Button = Library:Create('TextButton', {
+                                Parent = List_Frame,
+                                BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                                BackgroundTransparency = 1.000,
+                                BorderColor3 = Color3.fromRGB(0, 0, 0),
+                                BorderSizePixel = 0,
+                                Size = UDim2.new(1, 0, 1, 0),
+                                Font = Enum.Font.SourceSans,
+                                Text = "",
+                                TextColor3 = Color3.fromRGB(0, 0, 0),
+                                TextSize = 14.000,
+                            })
+                        
+                            local Dropdown_List_Title = Library:Create('TextLabel', {
+                                Parent = List_Frame,
+                                BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                                BackgroundTransparency = 1.000,
+                                BorderColor3 = Color3.fromRGB(0, 0, 0),
+                                BorderSizePixel = 0,
+                                Position = UDim2.new(0, 23, 0, 0),
+                                Size = UDim2.new(1, -23, 1, 0),
+                                Font = Enum.Font.SourceSans,
+                                TextColor3 = Themes.Default.Item_Deactive,
+                                TextSize = 12.000,
+                                TextXAlignment = Enum.TextXAlignment.Left,
+                                Text = Value,
+                            })
+
+                            Dropdown_List_Button.MouseEnter:Connect(function()
+                                Utility:Tween(Dropdown_List_Title, {TextColor3 = Themes.Default.Item_Active}, 0.15);
+                            end);
+                        
+                            Dropdown_List_Button.MouseLeave:Connect(function()
+                                Utility:Tween(Dropdown_List_Title, {TextColor3 = Themes.Default.Item_Deactive}, 0.15);
+                            end);
+
+                            local Selected;
+
+                            if Info.Multi then
+                                Selected = Dropdown.Value[Value];
+                            else
+                                Selected = Dropdown.Value == Value;
+                            end;
+
+                            function Table:UpdateButton()
+                                if Info.Multi then
+                                    Selected = Dropdown.Value[Value];
+
+                                    if Selected then
+                                        Dropdown_Check_Outer.BackgroundColor3 = Themes.Default.Background_Active
+                                        Dropdown_Check_Inner.Visible = true
+                                    else
+                                        Dropdown_Check_Outer.BackgroundColor3 = Themes.Default.Background_Deactive
+                                        Dropdown_Check_Inner.Visible = false
+                                    end
+                                else
+                                    Selected = Dropdown.Value == Value;
+                                    if Selected then
+                                        Dropdown_Check_Outer.BackgroundColor3 = Themes.Default.Background_Active
+                                        Dropdown_Check_Inner.Visible = true
+                                    else
+                                        Dropdown_Check_Outer.BackgroundColor3 = Themes.Default.Background_Deactive
+                                        Dropdown_Check_Inner.Visible = false
+                                    end
+                                end;
+                            end;
+
+                            Dropdown_List_Button.MouseButton1Click:Connect(function()
+
+                                local Try = not Selected;
+
+                                if Dropdown:GetActiveValues() == 1 and (not Try) then
+                                else
+                                    if Info.Multi then
+                                        Selected = Try;
+        
+                                        if Selected then
+                                            Dropdown.Value[Value] = true;
+                                        else
+                                            Dropdown.Value[Value] = nil;
+                                        end;
+                                    else
+                                        Selected = Try;
+        
+                                        if Selected then
+                                            Dropdown.Value = Value;
+                                        else
+                                            Dropdown.Value = nil;
+                                        end;
+        
+                                        for _, OtherButton in next, Buttons do
+                                            OtherButton:UpdateButton();
+                                        end;
+                                    end;
+        
+                                    Table:UpdateButton();
+                                    Dropdown:Display();
+        
+                                    Dropdown.Callback(Dropdown.Value);
+        
+                                    Library:AttemptSave();
+                                end;
+                            end);
+
+                            Table:UpdateButton();
+                            Dropdown:Display();
+
+                            Buttons[List_Frame] = Table;
+
+                        end
+                    end
+
+                    function Dropdown:UpdateValues(NewValues)
+                        if NewValues then
+                            Dropdown.List = NewValues;
+                        end;
+            
+                        Dropdown:BuildDropdownList();
+                    end;
+
+                    function Dropdown:SetValue(Val)
+                        if Dropdown.Multi then
+                            local nTable = {};
+            
+                            for Value, Bool in next, Val do
+                                if table.find(Dropdown.List, Value) then
+                                    nTable[Value] = true
+                                end;
+                            end;
+            
+                            Dropdown.Value = nTable;
+                        else
+                            if (not Val) then
+                                Dropdown.Value = nil;
+                            elseif table.find(Dropdown.List, Val) then
+                                Dropdown.Value = Val;
+                            end;
+                        end;
+            
+                        Dropdown:BuildDropdownList();
+            
+                        Dropdown.Callback(Dropdown.Value);
+                    end;
+
+
+                    --[[function Dropdown:SetValue(Val)
+
+                        if table.find(Dropdown.List, Val) then
+                            Dropdown.Value = Val
+                            Title_Dropdown.Text = Dropdown.Text.." - "..Val
+                        end;
+
+                        Dropdown.Callback(Dropdown.Value);
+
+                    end]]
+
+                    Dropdown:BuildDropdownList();
+                    Dropdown:Display();
+
+                    local Defaults = {}
+
+                    if type(Info.Default) == 'string' then
+                        local Idx = table.find(Dropdown.List, Info.Default)
+                        if Idx then
+                            table.insert(Defaults, Idx)
+                        end
+                    elseif type(Info.Default) == 'table' then
+                        for _, Value in next, Info.Default do
+                            local Idx = table.find(Dropdown.List, Value)
+                            if Idx then
+                                table.insert(Defaults, Idx)
+                            end
+                        end
+                    elseif type(Info.Default) == 'number' and Dropdown.List[Info.Default] ~= nil then
+                        table.insert(Defaults, Info.Default)
+                    end
+
+                    if next(Defaults) then
+                        for i = 1, #Defaults do
+                            local Index = Defaults[i]
+                            if Info.Multi then
+                                Dropdown.Value[Dropdown.List[Index]] = true
+                            else
+                                Dropdown.Value = Dropdown.List[Index];
+                            end
+            
+                            if (not Info.Multi) then break end
+                        end
+            
+                        Dropdown:BuildDropdownList();
+                        Dropdown:Display();
+                    end
+
+
+                    Options[Idx] = Dropdown
+                    return Dropdown
+                end
+
+                function AddonMenu:AddInput(Idx, Info)
+                    local Input = {
+                        Type = 'Input';
+                        Text = Info.Text;
+                        Tooltip = Info.Tooltip;
+                        Numeric = Info.Numeric or false;
+                        Finished = Info.Finished or false;
+ 
+                        Value = Info.Default or '';
+                        Callback = Info.Callback or function(Value) end;
+                    };
+
+                    local Input_Outer = Library:Create('Frame', {
+                        Parent = Group_Inner,
+                        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                        BackgroundTransparency = 1.000,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Size = UDim2.new(1, 0, 0, 20),
+                    })
+
+                    local Input_Inner = Library:Create('Frame', {
+                        Parent = Input_Outer,
+                        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                        BackgroundTransparency = 1.000,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Position = UDim2.new(0, 5, 0, 0),
+                        Size = UDim2.new(1, -10, 1, 0),
+                    })
+
+                    local InputBox = Library:Create('TextBox', {
+                        Parent = Input_Inner,
+                        BackgroundColor3 = Themes.Default.Background_Active,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Position = UDim2.new(0, 0, 0, 2),
+                        Size = UDim2.new(0, 100, 0, 16),
+                        Font = Enum.Font.SourceSans,
+                        Text = Info.Default or '',
+                        TextColor3 = Themes.Default.Item_Deactive,
+                        TextSize = 12.000,
+                        ClearTextOnFocus = false,
+                        PlaceholderText = 'Input here...',
+                        PlaceholderColor3 = Themes.Default.Item_Deactive,
+                    })
+
+                    Library:AddStroke(InputBox, Border, Themes.Default.Lines)
+
+                    local Input_Label = Library:Create('TextLabel', {
+                        Parent = Input_Inner,
+                        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                        BackgroundTransparency = 1.000,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Position = UDim2.new(0, 105, 0, 0),
+                        Size = UDim2.new(0, 105, 0, 20),
+                        Font = Enum.Font.SourceSans,
+                        Text = Info.Text,
+                        TextColor3 = Themes.Default.Item_Deactive,
+                        TextSize = 12.000,
+                        TextXAlignment = Enum.TextXAlignment.Left,
+                    })
+
+                    function Input:SetValue(addtext)
+
+                        if Input.Numeric then
+                            if (not tonumber(addtext)) then
+                                addtext = Input.Value
+                            end
+                        end
+
+                        Input.Value = addtext
+                        InputBox.Text = addtext
+
+                        Input.Callback(Input.Value);
+                    end
+
+                    if Input.Finished then
+                        InputBox.FocusLost:Connect(function(enter)
+                            if not enter then return end
+            
+                            Input:SetValue(InputBox.Text);
+                            Library:AttemptSave();
+                        end)
+                    else
+                        InputBox:GetPropertyChangedSignal('Text'):Connect(function()
+                            Input:SetValue(InputBox.Text);
+                            Library:AttemptSave();
+                        end);
+                    end
+
+                    --[[InputBox.FocusLost:Connect(function(enter)
+                        if not enter then return end
+
+                        Input:SetValue(InputBox.Text)
+                        Library:AttemptSave();
+                    end);]]
+
+                    if type(Info.Tooltip) == 'string' then
+                        Library:AddToolTip(Info.Tooltip, Input_Label)
+                    end
+
+                    Options[Idx] = Input
+                    return Input
+                end
+
+                function AddonMenu:AddLabel(isLabel)
+                    local Labels = {}
+                    local Label_Outer = Library:Create('Frame', {
+                        Parent = Group_Inner,
+                        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                        BackgroundTransparency = 1.000,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Size = UDim2.new(1, 0, 0, 20),
+                    })
+
+                    local Label_Inner = Library:Create('Frame', {
+                        Parent = Label_Outer,
+                        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                        BackgroundTransparency = 1.000,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Position = UDim2.new(0, 5, 0, 0),
+                        Size = UDim2.new(1, -10, 1, 0),
+                    })
+
+                    local Text_Label = Library:Create('TextLabel', {
+                        Parent = Label_Inner,
+                        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                        BackgroundTransparency = 1.000,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Size = UDim2.new(1, 0, 1, 0),
+                        Font = Enum.Font.SourceSans,
+                        TextColor3 = Themes.Default.Item_Active,
+                        TextSize = 12.000,
+                        TextXAlignment = Enum.TextXAlignment.Left,
+                        Text = isLabel,
+                    })
+
+                    function Labels:UpdateLabel(newLabel)
+                        Text_Label.Text = newLabel
+                    end
+
+                    return Labels
+                end
+
+                function AddonMenu:AddKeybind(Info)
+                    local Keybinds = {
+                        Text = Info.Text,
+                        Tooltip = Info.Tooltip,
+                        Name = Info.Name,
+                        Value = Info.Default,
+                        Callback = Info.Callback or function(Value) end
+                    }
+
+                    local Keybind_Outer = Library:Create('Frame', {
+                        Parent = Group_Inner,
+                        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                        BackgroundTransparency = 1.000,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Size = UDim2.new(1, 0, 0, 20),
+                    })
+
+                    local Keybind_Inner = Library:Create('Frame', {
+                        Parent = Keybind_Outer,
+                        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                        BackgroundTransparency = 1.000,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Position = UDim2.new(0, 5, 0, 0),
+                        Size = UDim2.new(1, -10, 1, 0),
+                    })
+
+                    local Keybind_Label = Library:Create('TextLabel', {
+                        Parent = Keybind_Inner,
+                        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                        BackgroundTransparency = 1.000,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Position = UDim2.new(0, 160, 0, 0),
+                        Size = UDim2.new(0, 50, 0, 20),
+                        Font = Enum.Font.Ubuntu,
+                        Text = Info.Name,
+                        TextColor3 = Themes.Default.Item_Deactive,
+                        TextSize = 10.000,
+                        TextXAlignment = Enum.TextXAlignment.Right,
+                    })
+
+                    local Keybind_Title = Library:Create('TextLabel', {
+                        Parent = Keybind_Inner,
+                        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                        BackgroundTransparency = 1.000,
+                        BorderColor3 = Color3.fromRGB(0, 0, 0),
+                        BorderSizePixel = 0,
+                        Size = UDim2.new(1, -50, 0, 20),
+                        Font = Enum.Font.SourceSans,
+                        TextColor3 = Themes.Default.Item_Deactive,
+                        Text = Info.Text,
+                        TextSize = 12.000,
+                        TextXAlignment = Enum.TextXAlignment.Left,
+                    })
+
+                    local ActivatedKeybind
+
+                    function Keybinds:UpdateKeybind()
+                        ActivatedKeybind = Keybinds.Value
+                        if not ActivatedKeybind then
+                            Keybind_Title.TextColor3 = Themes.Default.Item_Active
+                            Keybind_Label.TextColor3 = Themes.Default.Item_Active
+                        else
+                            Keybind_Title.TextColor3 = Themes.Default.Item_Deactive
+                            Keybind_Label.TextColor3 = Themes.Default.Item_Deactive
+                        end
+                    end
+
+                    UserInputService.InputBegan:Connect(function(input)
+                        if input.KeyCode == Keybinds.Value then
+                            Keybinds:UpdateKeybind()
+                            Keybinds.Value = not Keybinds.Value
+                            Keybinds.Callback(Keybinds.Value)
+                        end
+                    end)
+
+                    if type(Info.Tooltip) == 'string' then
+                        Library:AddToolTip(Info.Tooltip, Keybind_Title)
+                    end
+
+                    return Keybinds
+                end
+
+                return AddonMenu
+            end
+            return AddonGroup
+        end
+        return AddonSection
+    end
+    return AddonTab
+end
+
+return Libraryf
